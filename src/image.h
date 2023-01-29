@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace agl {
 
@@ -59,7 +60,7 @@ class Image {
    *
    * Data will have size width * height * 4 (RGB)
    */
-  char* data() const;
+  unsigned char* data() const;
 
   /**
    * @brief Replace image RGB data
@@ -190,6 +191,9 @@ class Image {
 
  private:
    // todo
+   unsigned char* _data;
+   int _width;
+   int _height;
 };
 }  // namespace agl
 #endif  // AGL_IMAGE_H_
