@@ -60,8 +60,8 @@ int main(int argc, char** argv)
    grayscale.save("earth-grayscale.png");
 
    // flip horizontal
-   Image flip = image.flipHorizontal(); 
-   flip.save("earth-flip.png"); 
+   // Image flip = image.flipHorizontal(); 
+   // flip.save("earth-flip.png"); 
 
    // sub image
    Image sub = image.subimage(200, 200, 100, 100); 

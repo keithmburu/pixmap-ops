@@ -49,7 +49,7 @@ Image& Image::operator=(const Image& orig) {
 Image::~Image() {
    std::cout << "Freeing memory" << std::endl;
    if (this->_data) {
-      // delete[] this->_data;
+      delete[] this->_data;
    }
 }
 
@@ -118,14 +118,22 @@ void Image::set(int i, const Pixel& c) {
 }
 
 Image Image::resize(int w, int h) const {
-   Image result(w, h);
+   Image result(*this);
+   // float xfactor = w/this->width();
+   // float yfactor = h/this->height();
+   // for (int i = 0; i < result.height(); i++) {
+   //    for (int j = 0; j < result.width(); j++) {
+   //       int idx = ((i * result.width()) + j) * 3;
+   //       result.set(idx, this->get(idx));
+   //    }
+   // }
    return result;
 }
 
 Image Image::flipHorizontal() const {
    Image result(*this);
-   for (int i = 0; (i < result.height() / 2) - 1; i++) {
-      for (int j = 0; j < result.width() - 1; j++) {
+   for (int i = 0; i < result.height() / 2; i++) {
+      for (int j = 0; j < result.width(); j++) {
          int idx = ((i * result.width()) + j) * 3;
          int newI = result.height() - i;
          int flippedIdx = ((newI * result.width()) + j) * 3;
@@ -140,8 +148,8 @@ Image Image::flipHorizontal() const {
 
 Image Image::flipVertical() const {
    Image result(*this);
-   for (int i = 0; i < result.height() - 1; i++) {
-      for (int j = 0; j < (result.width() / 2) - 1; j++) {
+   for (int i = 0; i < result.height(); i++) {
+      for (int j = 0; j < result.width() / 2; j++) {
          int idx = ((i * result.width()) + j) * 3;
          int newJ = result.width() - j;
          int flippedIdx = ((i * result.width()) + newJ) * 3;
@@ -162,10 +170,10 @@ Image Image::rotate90() const {
 
 Image Image::subimage(int startx, int starty, int w, int h) const {
    Image sub(w, h);
-   for (int i = startx; i < startx + w; i++) {
-      for (int j = starty; j < starty + h; j++) { 
-         int idx = ((i * sub.width()) + j) * 3;
-         sub.set(idx, this->get(i + startx, j + starty));
+   for (int i = startx; i < startx + h; i++) {
+      for (int j = starty; j < starty + w; j++) { 
+         int subIdx = (((i - startx) * sub.width()) + (j - starty)) * 3;
+         sub.set(subIdx, this->get(i, j));
       }
    }
    return sub;
@@ -222,9 +230,9 @@ Image Image::gammaCorrect(float gamma) const {
       for (int j = 0; j < result.width(); j++) {
          int idx = ((i * result.width()) + j) * 3;
          Pixel px = result.get(idx);
-         px.r = pow(px.r, 1 / gamma);
-         px.g = pow(px.g, 1 / gamma);
-         px.b = pow(px.b, 1 / gamma);
+         px.r = pow(px.r / 255.0, 1 / gamma) * 255;
+         px.g = pow(px.g / 255.0, 1 / gamma) * 255;
+         px.b = pow(px.b / 255.0, 1 / gamma) * 255;
          result.set(idx, px);
       }
    }
