@@ -13,6 +13,8 @@ int main(int argc, char** argv)
       exit(0);
    }
 
+   std::cout << "toString test: \n" << image << std::endl;
+
    for (int i = 0; i < image.height(); i++) {
       for (int j = 0; j < image.width(); j++) {
          Pixel c = image.get(i, j);
@@ -51,6 +53,8 @@ int main(int argc, char** argv)
    // should print 400 400
    cout << "loaded earth: " << image.width() << " " << image.height() << endl;
 
+   std::cout << "toString test: \n" << image << std::endl;
+
    // resize
    Image resize = image.resize(200,300);
    resize.save("earth-200-300.png");
@@ -60,29 +64,91 @@ int main(int argc, char** argv)
    grayscale.save("earth-grayscale.png");
 
    // flip horizontal
-   // Image flip = image.flipHorizontal(); 
-   // flip.save("earth-flip.png"); 
+   Image flip = image.flipHorizontal(); 
+   flip.save("earth-flip.png"); 
+   
+   // flip vertical
+   Image vflip = image.flipVertical(); 
+   vflip.save("earth-vflip.png");
 
    // sub image
    Image sub = image.subimage(200, 200, 100, 100); 
    sub.save("earth-subimage.png"); 
 
    // gamma correction
-   Image gamma = image.gammaCorrect(0.6f); 
-   gamma.save("earth-gamma-0.6.png"); 
+   Image gamma1 = image.gammaCorrect(0.6f); 
+   gamma1.save("earth-gamma-0.6.png"); 
 
-   gamma = image.gammaCorrect(2.2f);
-   gamma.save("earth-gamma-2.2.png"); 
+   Image gamma2 = image.gammaCorrect(2.2f);
+   gamma2.save("earth-gamma-2.2.png"); 
 
-   // alpha blend
+   // rotate90
+   Image rotate = image.rotate90();
+   rotate.save("earth-rotate90.png");
+
+   // swirl
+   Image swirl = image.swirl();
+   swirl.save("earth-swirl.png");
+
+   // color jitter
+   Image colorJitter = image.colorJitter(50);
+   colorJitter.save("earth-color-jitter.png"); 
+
+   // blur
+   Image blur = image.blur();
+   blur.save("earth-blur.png"); 
+
+   // glow
+   Image glow = image.glow();
+   glow.save("earth-glow.png"); 
+
+   // border
+   Image border = image.border();
+   border.save("earth-border.png"); 
+
+
    Image soup;
    soup.load("../images/soup.png");
 
-   int y = (int) (0.5f * (image.width() - soup.width()));
-   int x = (int) (0.5f * (image.height() - soup.height()));
+   Image rose;
+   rose.load("../images/rose.jpg");
+
+
+   // add
+   Image add = image.add(rose);
+   add.save("earth-add-rose.png");
+
+   // subtract
+   Image subtract = image.subtract(rose);
+   subtract.save("earth-subtract-rose.png");
+   
+   // multiply
+   Image multiply = image.multiply(rose);
+   multiply.save("earth-multiply-rose.png");
+
+   // difference
+   Image difference = image.difference(rose);
+   difference.save("earth-difference-rose.png");
+
+   // lightest
+   Image lightest = image.lightest(rose);
+   lightest.save("earth-rose-lightest.png");
+
+   // darkest
+   Image darkest = image.darkest(rose);
+   darkest.save("earth-rose-darkest.png");
+
+   // invert
+   Image invert = image.invert();
+   invert.save("earth-invert.png"); 
+
+   // alpha blend
+   int y = (int) (0.5f * (image.height() - soup.height()));
+   int x = (int) (0.5f * (image.width() - soup.width()));
    Image background = image.subimage(x, y, soup.width(), soup.height());
    background.save("background-test.png");
    Image blend = background.alphaBlend(soup, 0.5f);
+   blend.save("blend-test.png");
    image.replace(blend, x, y);
    image.save("earth-blend-0.5.png");
 }

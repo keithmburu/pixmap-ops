@@ -28,6 +28,7 @@ class Image {
   Image(int width, int height);
   Image(const Image& orig);
   Image& operator=(const Image& orig);
+  friend std::ostream& operator<<(std::ostream& os, const Image& image);
 
   virtual ~Image();
 
@@ -45,7 +46,7 @@ class Image {
    * @param filename The file to load, relative to the running directory
    * @param flip Whether the file should flipped vertally before being saved
    */
-  bool save(const std::string& filename, bool flip = true) const;
+  bool save(const std::string& filename, bool flip = false) const;
 
   /** @brief Return the image width in pixels
    */
@@ -189,8 +190,13 @@ class Image {
   // Fill this image with a color
   void fill(const Pixel& c);
 
+  Image blur(int iters = 1) const;
+
+  Image glow() const;
+
+  Image border() const;
+
  private:
-   // todo
    unsigned char* _data;
    int _width;
    int _height;
