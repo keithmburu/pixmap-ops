@@ -1,4 +1,9 @@
-// Copyright 2021, Aline Normoyle, alinen
+/**
+ * @file image.cpp
+ * @author Keith Mburu
+ * @author Aline Normoyle
+ * @version 2023-02-02
+ */
 
 #include "image.h"
 
@@ -39,6 +44,7 @@ Image& Image::operator=(const Image& orig) {
    if (&orig == this) {
       return *this;
    }
+   free(this->_data);
    this->_data = orig.data();
    this->_width = orig.width();
    this->_height = orig.height();
@@ -122,16 +128,16 @@ Pixel Image::get(int row, int col) const {
    return Pixel{ this->_data[idx], this->_data[idx + 1], this->_data[idx + 2] };
 }
 
+Pixel Image::get(int i) const {
+   int idx = i * 3;
+   return Pixel{ this->_data[idx], this->_data[idx + 1], this->_data[idx + 2] };
+}
+
 void Image::set(int row, int col, const Pixel& color) {
    int idx = ((row * this->width()) + col) * 3;
    this->_data[idx] = color.r;
    this->_data[idx + 1] = color.g;
    this->_data[idx + 2] = color.b;
-}
-
-Pixel Image::get(int i) const {
-   int idx = i * 3;
-   return Pixel{ this->_data[idx], this->_data[idx + 1], this->_data[idx + 2] };
 }
 
 void Image::set(int i, const Pixel& c) {
@@ -142,6 +148,7 @@ void Image::set(int i, const Pixel& c) {
 }
 
 Image Image::resize(int w, int h) const {
+   std::cout << "Resizing to " << w << " by " << h << std::endl;
    Image result(w, h);
    for (int i2 = 0; i2 < result.height(); i2++) {
       for (int j2 = 0; j2 < result.width(); j2++) {
@@ -157,6 +164,7 @@ Image Image::resize(int w, int h) const {
 }
 
 Image Image::flipHorizontal() const {
+   std::cout << "Flipping horizontally" << std::endl;
    Image result(*this);
    for (int i = 0; i < result.height() / 2; i++) {
       for (int j = 0; j < result.width(); j++) {
@@ -171,6 +179,7 @@ Image Image::flipHorizontal() const {
 }
 
 Image Image::flipVertical() const {
+   std::cout << "Flipping vertically" << std::endl;
    Image result(*this);
    for (int i = 0; i < result.height(); i++) {
       for (int j = 0; j < result.width() / 2; j++) {
@@ -185,6 +194,7 @@ Image Image::flipVertical() const {
 }
 
 Image Image::rotate90() const {
+   std::cout << "Rotating 90 degrees" << std::endl;
    Image result(*this);
    for (int i = 0; i < result.height(); i++) {
       for (int j = 0; j < result.width(); j++) {
@@ -198,6 +208,7 @@ Image Image::rotate90() const {
 }
 
 Image Image::subimage(int startx, int starty, int w, int h) const {
+   std::cout << "Creating " << w << " by " << h << " subimage from (" << startx << ", " << starty << ")" << std::endl;
    Image sub(w, h);
    for (int i = starty; i < starty + h; i++) {
       for (int j = startx; j < startx + w; j++) { 
@@ -209,6 +220,7 @@ Image Image::subimage(int startx, int starty, int w, int h) const {
 }
 
 void Image::replace(const Image& image, int startx, int starty) {
+   std::cout << "Replacing from (" << startx << ", " << starty << ")" << std::endl;
    if (this->width() - startx >= image.width() && this->height() - starty >= image.height()) {
       for (int i = starty; i < starty + image.height(); i++) {
          for (int j = startx; j < startx + image.width(); j++) {
@@ -224,6 +236,7 @@ void Image::replace(const Image& image, int startx, int starty) {
 }
 
 Image Image::swirl() const {
+   std::cout << "Swirling colors" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = this->get(idx);
@@ -237,6 +250,7 @@ Image Image::swirl() const {
 }
 
 Image Image::add(const Image& other) const {
+   std::cout << "Adding" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -250,6 +264,7 @@ Image Image::add(const Image& other) const {
 }
 
 Image Image::subtract(const Image& other) const {
+   std::cout << "Subtracting" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -263,6 +278,7 @@ Image Image::subtract(const Image& other) const {
 }
 
 Image Image::multiply(const Image& other) const {
+   std::cout << "Multiplying" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -276,6 +292,7 @@ Image Image::multiply(const Image& other) const {
 }
 
 Image Image::difference(const Image& other) const {
+   std::cout << "Finding difference" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -289,6 +306,7 @@ Image Image::difference(const Image& other) const {
 }
 
 Image Image::lightest(const Image& other) const {
+   std::cout << "Finding lightest" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -302,6 +320,7 @@ Image Image::lightest(const Image& other) const {
 }
 
 Image Image::darkest(const Image& other) const {
+   std::cout << "Finding darkest" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -315,6 +334,7 @@ Image Image::darkest(const Image& other) const {
 }
 
 Image Image::gammaCorrect(float gamma) const {
+   std::cout << "Gamma correcting with gamma = " << gamma << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = result.get(idx);
@@ -327,6 +347,7 @@ Image Image::gammaCorrect(float gamma) const {
 }
 
 Image Image::alphaBlend(const Image& other, float alpha) const {
+   std::cout << "Blending with alpha = " << alpha << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px1 = this->get(idx);
@@ -340,6 +361,7 @@ Image Image::alphaBlend(const Image& other, float alpha) const {
 }
 
 Image Image::invert() const {
+   std::cout << "Inverting" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = this->get(idx);
@@ -352,6 +374,7 @@ Image Image::invert() const {
 }
 
 Image Image::grayscale() const {
+   std::cout << "Making grayscale" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = this->get(idx);
@@ -363,6 +386,7 @@ Image Image::grayscale() const {
 }
 
 Image Image::colorJitter(int size) const {
+   std::cout << "Jittering colors with size = " << size << std::endl;
    Image result(*this);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = this->get(idx);
@@ -379,15 +403,18 @@ Image Image::colorJitter(int size) const {
 }
 
 Image Image::bitmap(int size) const {
+   std::cout << "Creating bitmap with size = " << size << std::endl;
    Image image(0, 0);
    
    return image;
 }
 
 void Image::fill(const Pixel& c) {
-  }
+   std::cout << "Filling" << std::endl;
+}
 
 Image Image::blur(int iters) const {
+   std::cout << "Blurring with iters = " << iters << std::endl;
    Image result(*this);
    for (int iter = 0; iter < iters; iter++) {
       for (int i = 0; i < result.height(); i++) {
@@ -418,6 +445,7 @@ Image Image::blur(int iters) const {
 }
 
 Image Image::glow() const {
+   std::cout << "Glowifying" << std::endl;
    Image white(*this);
    for (int idx = 0; idx < this->width() * this->height(); idx++) {
       Pixel px = this->get(idx);
@@ -431,12 +459,13 @@ Image Image::glow() const {
    return this->alphaBlend(white.blur(), 0.25);
 }
 
-Image Image::border() const {
+Image Image::border(const Pixel& c) const {
+   std::cout << "Drawing borders with color " << (int) c.r << " " << (int) c.g << " " << (int) c.b << std::endl;
    Image result(*this);
    // top and bottom
    for (int j = 0; j < result.width(); j++) {
-      result.set(0, j, {255, 255, 255});
-      result.set(result.height() - 1, j, {255, 255, 255});
+      result.set(0, j, c);
+      result.set(result.height() - 1, j, c);
    }
    // left and right
    for (int i = 1; i < result.height() - 1; i++) {

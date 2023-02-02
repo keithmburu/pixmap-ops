@@ -1,4 +1,9 @@
-// Copyright 2021, Aline Normoyle, alinen
+/**
+ * @file pixmap_test.cpp
+ * @author Keith Mburu
+ * @author Aline Normoyle
+ * @version 2023-02-02
+ */
 
 #include <iostream>
 #include "image.h"
@@ -13,7 +18,7 @@ int main(int argc, char** argv)
       exit(0);
    }
 
-   std::cout << "toString test: \n" << image << std::endl;
+   std::cout << "feep toString: \n" << image << std::endl;
 
    for (int i = 0; i < image.height(); i++) {
       for (int j = 0; j < image.width(); j++) {
@@ -23,9 +28,6 @@ int main(int argc, char** argv)
       std::cout << std::endl;
    }
    image.save("feep-test-save.png"); // should match original
-   
-   // should print 4 4
-   cout << "loaded feep: " << image.width() << " " << image.height() << endl;
 
    // test: copy constructor
    Image copy = image; 
@@ -50,10 +52,7 @@ int main(int argc, char** argv)
       exit(0);
    }
 
-   // should print 400 400
-   cout << "loaded earth: " << image.width() << " " << image.height() << endl;
-
-   std::cout << "toString test: \n" << image << std::endl;
+   std::cout << "earth toString: \n" << image << std::endl;
 
    // resize
    Image resize = image.resize(200,300);
@@ -103,7 +102,7 @@ int main(int argc, char** argv)
    glow.save("earth-glow.png"); 
 
    // border
-   Image border = image.border();
+   Image border = image.border({255, 255, 255});
    border.save("earth-border.png"); 
 
 
@@ -113,6 +112,7 @@ int main(int argc, char** argv)
    Image rose;
    rose.load("../images/rose.jpg");
 
+   std::cout << "rose toString: \n" << image << std::endl;
 
    // add
    Image add = image.add(rose);

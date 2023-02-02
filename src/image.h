@@ -194,7 +194,7 @@ class Image {
 
   Image glow() const;
 
-  Image border() const;
+  Image border(const Pixel& c) const;
 
  private:
    unsigned char* _data;
