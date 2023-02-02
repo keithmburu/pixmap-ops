@@ -108,6 +108,15 @@ int main(int argc, char** argv)
    // sobel.save("earth-sobel.png"); 
 
 
+   // bitmap
+   Image bitmap = image.bitmap(10);
+   bitmap.save("earth-bitmap.png"); 
+
+   // fill
+   Image fill = image.fill({255, 0, 0});
+   fill.save("earth-fill.png"); 
+
+
    Image soup;
    soup.load("../images/soup.png");
    std::cout << "\nsoup toString: \n" << soup << std::endl;

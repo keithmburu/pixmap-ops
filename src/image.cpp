@@ -399,14 +399,46 @@ Image Image::colorJitter(int size) const {
 }
 
 Image Image::bitmap(int size) const {
+   Image result(*this);
    std::cout << "Creating bitmap with size = " << size << std::endl;
-   Image image(0, 0);
-   
-   return image;
+   for (int i = 0; i < result.height(); i+=size) {
+      for (int j = 0; j < result.width(); j+=size) {
+         int sumRed; int sumGreen; int sumBlue;
+         sumRed = sumGreen = sumBlue = 0;
+         for (int k = i; k < i + size; k++) {
+            for (int l = j; l < j + size; l++) {
+               Pixel px = result.get(k, l);
+               sumRed += px.r;
+               sumGreen += px.g;
+               sumBlue += px.b;
+            }
+         }
+         unsigned char avgRed = sumRed / (size * size);
+         unsigned char avgGreen = sumGreen / (size * size);
+         unsigned char avgBlue = sumBlue / (size * size);
+         for (int k = i; k < i + size; k++) {
+            for (int l = j; l < j + size; l++) {
+               result.set(k, l, {avgRed, avgGreen, avgBlue});
+            }
+         }
+      }
+   }
+   return result;
 }
 
-void Image::fill(const Pixel& c) {
-   std::cout << "Filling with color " << c.r << " " << c.g << " " << c.b << std::endl;
+Image Image::fill(const Pixel& c) {
+   std::cout << "Filling with color " << (int) c.r << " " << (int) c.g << " " << (int) c.b << std::endl;
+   Image result(*this);
+   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+      Pixel px = this->get(idx);
+      if (px.r > 100 && px.g > 100 && px.b > 100) {
+         px.r = c.r;
+         px.g = c.g;
+         px.b = c.b;
+      }
+      result.set(idx, px);
+   }
+   return result;
 }
 
 Image Image::blur(int iters) const {
@@ -479,7 +511,6 @@ Image Image::sobel() const {
       px.r = px.g = px.b = avg;
       result.set(idx, px);
    }
-   
    int Gx[9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
    int Gy[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
    for (int i = 0; i < result.height(); i++) {
@@ -498,9 +529,9 @@ Image Image::sobel() const {
                   sumNeighborsGreenY += (int) px.g * Gy[idx];
                   sumNeighborsBlueY += (int) px.b * Gy[idx];
                } 
-               int GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
-               int GGreen = std::min((int) sqrt(pow(sumNeighborsGreenX, 2) + pow(sumNeighborsGreenY, 2)), 255);
-               int GBlue = std::min((int) sqrt(pow(sumNeighborsBlueX, 2) + pow(sumNeighborsBlueY, 2)), 255);
+               unsigned char GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
+               unsigned char GGreen = std::min((int) sqrt(pow(sumNeighborsGreenX, 2) + pow(sumNeighborsGreenY, 2)), 255);
+               unsigned char GBlue = std::min((int) sqrt(pow(sumNeighborsBlueX, 2) + pow(sumNeighborsBlueY, 2)), 255);
                result.set(i, j, {GRed, GGreen, GBlue});
             }
          }
