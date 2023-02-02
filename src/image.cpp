@@ -1,7 +1,8 @@
 /**
+ * Implementation of image loading, modification, and saving
+ * 
  * @file image.cpp
  * @author Keith Mburu
- * @author Aline Normoyle
  * @version 2023-02-02
  */
 
@@ -59,7 +60,6 @@ std::ostream& operator<<(std::ostream& os, const Image& image) {
       sumRed += (int) px.r;
       sumGreen += (int) px.g;
       sumBlue += (int) px.b;
-      // std::cout << sumRed << " " << sumGreen << " " << sumBlue << std::endl;
    }
    int avgRed = sumRed / (image.width() * image.height());
    int avgGreen = sumGreen / (image.width() * image.height());
@@ -154,9 +154,7 @@ Image Image::resize(int w, int h) const {
       for (int j2 = 0; j2 < result.width(); j2++) {
          int i1 = (int)((float) i2 / (result.height() - 1) * (this->height() - 1));
          int j1 = (int)((float) j2 / (result.width() - 1) * (this->width() - 1));
-         // std::cout << i1 << " " << j1 << std::endl;
          Pixel px1 = this->get(i1, j1);
-         // std::cout << (int) px1.r << " " << (int) px1.g << std::endl;
          result.set(i2, j2, px1);
       }
    }
@@ -170,7 +168,6 @@ Image Image::flipHorizontal() const {
       for (int j = 0; j < result.width(); j++) {
          int newI = result.height() - i - 1;
          Pixel temp = this->get(newI, j);
-         // std::cout << i << " " << j << "  " << idx << " " << flippedIdx << std::endl;
          result.set(newI, j, this->get(i, j));
          result.set(i, j, temp);
       }
@@ -185,7 +182,6 @@ Image Image::flipVertical() const {
       for (int j = 0; j < result.width() / 2; j++) {
          int newJ = result.width() - j - 1;
          Pixel temp = this->get(i, newJ);
-         // std::cout << i << " " << j << "  " << idx << " " << flippedIdx << std::endl;
          result.set(i, newJ, this->get(i, j));
          result.set(i, j, temp);
       }
@@ -208,7 +204,7 @@ Image Image::rotate90() const {
 }
 
 Image Image::subimage(int startx, int starty, int w, int h) const {
-   std::cout << "Creating " << w << " by " << h << " subimage from (" << startx << ", " << starty << ")" << std::endl;
+   std::cout << "Creating " << w << " by " << h << " subimage starting from (" << startx << ", " << starty << ")" << std::endl;
    Image sub(w, h);
    for (int i = starty; i < starty + h; i++) {
       for (int j = startx; j < startx + w; j++) { 
@@ -220,7 +216,7 @@ Image Image::subimage(int startx, int starty, int w, int h) const {
 }
 
 void Image::replace(const Image& image, int startx, int starty) {
-   std::cout << "Replacing from (" << startx << ", " << starty << ")" << std::endl;
+   std::cout << "Replacing with " << image.width() << " by " << image.height() << " image starting from (" << startx << ", " << starty << ")" << std::endl;
    if (this->width() - startx >= image.width() && this->height() - starty >= image.height()) {
       for (int i = starty; i < starty + image.height(); i++) {
          for (int j = startx; j < startx + image.width(); j++) {
@@ -410,7 +406,7 @@ Image Image::bitmap(int size) const {
 }
 
 void Image::fill(const Pixel& c) {
-   std::cout << "Filling" << std::endl;
+   std::cout << "Filling with color " << c.r << " " << c.g << " " << c.b << std::endl;
 }
 
 Image Image::blur(int iters) const {
@@ -455,7 +451,6 @@ Image Image::glow() const {
    }
    white.save("earth-white.png");
    white.blur().save("earth-white-blur.png");
-   // std::cout << result << std::endl;
    return this->alphaBlend(white.blur(), 0.25);
 }
 
@@ -471,6 +466,45 @@ Image Image::border(const Pixel& c) const {
    for (int i = 1; i < result.height() - 1; i++) {
       result.set(i, 0, {255, 255, 255});
       result.set(i, result.width() - 1, {255, 255, 255});
+   }
+   return result;
+}
+
+Image Image::sobel() const {
+   std::cout << "Applying sobel operator" << std::endl;
+   Image result(*this);
+   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+      Pixel px = this->get(idx);
+      int avg = (px.r + px.g + px.b) / 3;
+      px.r = px.g = px.b = avg;
+      result.set(idx, px);
+   }
+   
+   int Gx[9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+   int Gy[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+   for (int i = 0; i < result.height(); i++) {
+      for (int j = 0; j < result.width(); j++) {
+         for (int k = i - 1; k <= i + 1; k++) {
+            for (int l = j - 1; l <= j + 1; l++) {
+               int sumNeighborsRedX; int sumNeighborsGreenX; int sumNeighborsBlueX; int sumNeighborsRedY; int sumNeighborsGreenY; int sumNeighborsBlueY;
+               sumNeighborsRedX = sumNeighborsGreenX = sumNeighborsBlueX = sumNeighborsRedY = sumNeighborsGreenY = sumNeighborsBlueY = 0;
+               if (0 <= k && k < result.height() && 0 <= l && l < result.width()) {
+                  Pixel px = result.get(k, l);
+                  int idx = ((k - (i - 1)) * 3) + (l - (j - 1));
+                  sumNeighborsRedX += (int) px.r * Gx[idx];
+                  sumNeighborsGreenX += (int) px.g * Gx[idx];
+                  sumNeighborsBlueX += (int) px.b * Gx[idx];
+                  sumNeighborsRedY += (int) px.r * Gy[idx];
+                  sumNeighborsGreenY += (int) px.g * Gy[idx];
+                  sumNeighborsBlueY += (int) px.b * Gy[idx];
+               } 
+               int GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
+               int GGreen = std::min((int) sqrt(pow(sumNeighborsGreenX, 2) + pow(sumNeighborsGreenY, 2)), 255);
+               int GBlue = std::min((int) sqrt(pow(sumNeighborsBlueX, 2) + pow(sumNeighborsBlueY, 2)), 255);
+               result.set(i, j, {GRed, GGreen, GBlue});
+            }
+         }
+      }
    }
    return result;
 }

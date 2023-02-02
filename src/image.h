@@ -1,4 +1,11 @@
-// Copyright 2021, Aline Normoyle, alinen
+/**
+ * Class that loads images, performs various operations on them, and 
+ * saves them
+ * 
+ * @file image.h
+ * @author Keith Mburu
+ * @version 2023-02-02
+ */
 
 #ifndef AGL_IMAGE_H_
 #define AGL_IMAGE_H_
@@ -11,7 +18,6 @@ namespace agl {
 
 /**
  * @brief Holder for a RGB color
- * 
  */
 struct Pixel {
     unsigned char r;
@@ -190,15 +196,24 @@ class Image {
   // Fill this image with a color
   void fill(const Pixel& c);
 
+  // Apply simple box blur to image 
   Image blur(int iters = 1) const;
 
+  // Apply glowing texture to image
   Image glow() const;
 
+  // Color the pixels at the edges of image
   Image border(const Pixel& c) const;
 
+  // Accentuate edges in image
+  Image sobel() const;
+
  private:
+   // char array for storing pixel data
    unsigned char* _data;
+   // number of pixels in the image's x dimension
    int _width;
+   // number of pixels in the image's y dimension
    int _height;
 };
 }  // namespace agl

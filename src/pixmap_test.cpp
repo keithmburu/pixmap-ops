@@ -17,7 +17,6 @@ int main(int argc, char** argv)
       std::cout << "ERROR: Cannot load image! Exiting...\n";
       exit(0);
    }
-
    std::cout << "feep toString: \n" << image << std::endl;
 
    for (int i = 0; i < image.height(); i++) {
@@ -51,8 +50,7 @@ int main(int argc, char** argv)
       std::cout << "ERROR: Cannot load image! Exiting...\n";
       exit(0);
    }
-
-   std::cout << "earth toString: \n" << image << std::endl;
+   std::cout << "\nearth toString: \n" << image << std::endl;
 
    // resize
    Image resize = image.resize(200,300);
@@ -91,7 +89,7 @@ int main(int argc, char** argv)
 
    // color jitter
    Image colorJitter = image.colorJitter(50);
-   colorJitter.save("earth-color-jitter.png"); 
+   colorJitter.save("earth-colorJitter.png"); 
 
    // blur
    Image blur = image.blur();
@@ -105,30 +103,38 @@ int main(int argc, char** argv)
    Image border = image.border({255, 255, 255});
    border.save("earth-border.png"); 
 
+   // // sobel
+   // Image sobel = image.sobel();
+   // sobel.save("earth-sobel.png"); 
+
 
    Image soup;
    soup.load("../images/soup.png");
+   std::cout << "\nsoup toString: \n" << soup << std::endl;
 
    Image rose;
    rose.load("../images/rose.jpg");
+   std::cout << "\nrose toString: \n" << rose << std::endl;
 
-   std::cout << "rose toString: \n" << image << std::endl;
+   // // rose sobel
+   // Image roseSobel = rose.sobel();
+   // roseSobel.save("rose-sobel.png"); 
 
    // add
    Image add = image.add(rose);
-   add.save("earth-add-rose.png");
+   add.save("earth-rose-add.png");
 
    // subtract
    Image subtract = image.subtract(rose);
-   subtract.save("earth-subtract-rose.png");
+   subtract.save("earth-rose-subtract.png");
    
    // multiply
    Image multiply = image.multiply(rose);
-   multiply.save("earth-multiply-rose.png");
+   multiply.save("earth-rose-multiply.png");
 
    // difference
    Image difference = image.difference(rose);
-   difference.save("earth-difference-rose.png");
+   difference.save("earth-rose-difference.png");
 
    // lightest
    Image lightest = image.lightest(rose);
