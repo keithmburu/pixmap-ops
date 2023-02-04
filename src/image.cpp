@@ -89,7 +89,7 @@ unsigned char* Image::data() const {
 }
 
 void Image::set(int width, int height, unsigned char* data) {
-   if (this->width() == width && this->height() == height) {
+   if (this->_width == width && this->_height == height) {
       this->_data = data;
    } else {
       std::cerr << "set(): Dimensions must match!" << std::endl;
@@ -114,7 +114,7 @@ bool Image::save(const std::string& filename, bool flip) const {
    if (flip) {
       data = (this->flipHorizontal()).data();
    }
-   int saved = stbi_write_png(filename.c_str(), this->width(), this->height(), 3, (void*) data, this->width() * 3);
+   int saved = stbi_write_png(filename.c_str(), this->_width, this->_height, 3, (void*) data, this->_width * 3);
    if (!saved) {
       std::cout << "Write error" << std::endl;
       return false;
@@ -124,7 +124,7 @@ bool Image::save(const std::string& filename, bool flip) const {
 }
 
 Pixel Image::get(int row, int col) const {
-   int idx = ((row * this->width()) + col) * 3;
+   int idx = ((row * this->_width) + col) * 3;
    return Pixel{ this->_data[idx], this->_data[idx + 1], this->_data[idx + 2] };
 }
 
@@ -134,7 +134,7 @@ Pixel Image::get(int i) const {
 }
 
 void Image::set(int row, int col, const Pixel& color) {
-   int idx = ((row * this->width()) + col) * 3;
+   int idx = ((row * this->_width) + col) * 3;
    this->_data[idx] = color.r;
    this->_data[idx + 1] = color.g;
    this->_data[idx + 2] = color.b;
@@ -152,8 +152,8 @@ Image Image::resize(int w, int h) const {
    Image result(w, h);
    for (int i2 = 0; i2 < result.height(); i2++) {
       for (int j2 = 0; j2 < result.width(); j2++) {
-         int i1 = (int)((float) i2 / (result.height() - 1) * (this->height() - 1));
-         int j1 = (int)((float) j2 / (result.width() - 1) * (this->width() - 1));
+         int i1 = (int)((float) i2 / (result.height() - 1) * (this->_height - 1));
+         int j1 = (int)((float) j2 / (result.width() - 1) * (this->_width - 1));
          Pixel px1 = this->get(i1, j1);
          result.set(i2, j2, px1);
       }
@@ -217,10 +217,10 @@ Image Image::subimage(int startx, int starty, int w, int h) const {
 
 void Image::replace(const Image& image, int startx, int starty) {
    std::cout << "Replacing with " << image.width() << " by " << image.height() << " image starting from (" << startx << ", " << starty << ")" << std::endl;
-   if (this->width() - startx >= image.width() && this->height() - starty >= image.height()) {
+   if (this->_width - startx >= image.width() && this->_height - starty >= image.height()) {
       for (int i = starty; i < starty + image.height(); i++) {
          for (int j = startx; j < startx + image.width(); j++) {
-            int idx1 = (i * this->width()) + j;
+            int idx1 = (i * this->_width) + j;
             int idx2 = ((i - starty) * image.width()) + (j - startx);
             Pixel px2 = image.get(idx2);
             this->set(idx1, px2);
@@ -384,7 +384,7 @@ Image Image::grayscale() const {
 Image Image::colorJitter(int size) const {
    std::cout << "Jittering colors with size = " << size << std::endl;
    Image result(*this);
-   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
       int jitter = rand() % size;
       if (jitter % 2 == 0) {
@@ -441,30 +441,33 @@ Image Image::fill(const Pixel& c) {
    return result;
 }
 
-Image Image::blur(int iters) const {
-   std::cout << "Blurring with iters = " << iters << std::endl;
+Image Image::blur() const {
+   std::cout << "Blurring" << std::endl;
    Image result(*this);
-   for (int iter = 0; iter < iters; iter++) {
-      for (int i = 0; i < result.height(); i++) {
-         for (int j = 0; j < result.width(); j++) {
-            int sumNeighborsRed; int sumNeighborsGreen; int sumNeighborsBlue;
+   int ITERS = 1;
+   int KERNEL_SIZE = 21;
+   int offset = KERNEL_SIZE / 2;
+   for (int iter = 0; iter < ITERS; iter++) {
+      for (int i = 0; i < this->_height; i++) {
+         for (int j = 0; j < this->_width; j++) {
+            int sumNeighborsRed, sumNeighborsGreen, sumNeighborsBlue;
             sumNeighborsRed = sumNeighborsGreen = sumNeighborsBlue = 0;
-            for (int k = i - 1; k <= i + 1; k++) {
-               for (int l = j - 1; l <= j + 1; l++) {
+            for (int k = i - offset; k <= i + offset; k++) {
+               for (int l = j - offset; l <= j + offset; l++) {
                   Pixel px;
-                  if (0 <= k && k < result.height() && 0 <= l && l < result.width()) {
-                     px = result.get(k, l);
+                  if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
+                     px = this->get(k, l);
                   } else {
-                     px = result.get(i, j);
+                     px = this->get(i, j);
                   }
                   sumNeighborsRed += px.r;
                   sumNeighborsGreen += px.g;
                   sumNeighborsBlue += px.b;
                }
             }
-            unsigned char avgNeighborsRed = sumNeighborsRed / 9; 
-            unsigned char avgNeighborsGreen = sumNeighborsGreen / 9; 
-            unsigned char avgNeighborsBlue = sumNeighborsBlue / 9;
+            unsigned char avgNeighborsRed = sumNeighborsRed / (KERNEL_SIZE * KERNEL_SIZE); 
+            unsigned char avgNeighborsGreen = sumNeighborsGreen / (KERNEL_SIZE * KERNEL_SIZE); 
+            unsigned char avgNeighborsBlue = sumNeighborsBlue / (KERNEL_SIZE * KERNEL_SIZE);
             result.set(i, j, {avgNeighborsRed, avgNeighborsGreen, avgNeighborsBlue});
          }
       }
@@ -472,18 +475,72 @@ Image Image::blur(int iters) const {
    return result;
 }
 
+Image Image::blurGaussian() const {
+   std::cout << "Blurring with Gaussian blur" << std::endl;
+   Image result(*this);
+   float STD_DEV = 1.0;
+   int KERNEL_SIZE = 3;
+   float kernel[KERNEL_SIZE][KERNEL_SIZE];
+   float kernelSum = 0.0;
+   int offset = KERNEL_SIZE / 2;
+   for (int k = -offset; k <= offset; k++) {
+     for (int l = -offset; l <= offset; l++) {
+         float exponent = -(k * k + l * l) / (2 * STD_DEV * STD_DEV);
+         kernel[k + offset][l + offset] = (1 / (2 * M_PI * STD_DEV * STD_DEV)) * exp(exponent);
+         kernelSum += kernel[k + offset][l + offset];
+         std::cout << kernel[k + offset][l + offset] << " ";
+     }
+     std::cout << std::endl;
+   }
+   for (int i = 0; i < KERNEL_SIZE; i++) {
+      for (int j = 0; j < KERNEL_SIZE; j++) {
+         kernel[i][j] /= kernelSum;
+         std::cout << kernel[i][j] << " ";
+      }
+      std::cout << std::endl;
+   }
+
+   int ITERS = 1;
+   for (int iter = 0; iter < ITERS; iter++) {
+      for (int i = 0; i < this->_height; i++) {
+         for (int j = 0; j < this->_width; j++) {
+            int avgNeighborsRed, avgNeighborsGreen, avgNeighborsBlue;
+            avgNeighborsRed = avgNeighborsGreen = avgNeighborsBlue = 0;
+            for (int k = i - offset; k <= i + offset; k++) {
+               for (int l = j - offset; l <= j + offset; l++) {
+                  Pixel px;
+                  if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
+                     px = this->get(k, l);
+                  } else {
+                     px = this->get(i, j);
+                  }
+                  avgNeighborsRed += px.r * kernel[k - (i - offset)][l - (j - offset)];
+                  avgNeighborsGreen += px.g * kernel[k - (i - offset)][l - (j - offset)];
+                  avgNeighborsBlue += px.b * kernel[k - (i - offset)][l - (j - offset)];
+               }
+            }
+            result.set(i, j, {(unsigned char) avgNeighborsRed, (unsigned char) avgNeighborsGreen, (unsigned char) avgNeighborsBlue});
+         }
+      }
+   }
+   return result;
+}
+
 Image Image::glow() const {
-   std::cout << "Glowifying" << std::endl;
+   std::cout << "Applying glow effect" << std::endl;
    Image white(*this);
-   for (int idx = 0; idx < this->width() * this->height(); idx++) {
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      if (px.r < 200 || px.g < 200 || px.b < 200) {
+      if (px.r < 175 || px.g < 175 || px.b < 175) {
          white.set(idx, {0, 0, 0});
       }
    }
    white.save("earth-white.png");
    white.blur().save("earth-white-blur.png");
-   return this->alphaBlend(white.blur(), 0.25);
+   white.blurGaussian().save("earth-white-blurGaussian.png");
+   return this->alphaBlend(white.blur(), 0.5);
+   // return this->add(white.blur());
+   // return this->alphaBlend(white.blurGaussian(), 0.25);
 }
 
 Image Image::border(const Pixel& c) const {
@@ -505,36 +562,92 @@ Image Image::border(const Pixel& c) const {
 Image Image::sobel() const {
    std::cout << "Applying sobel operator" << std::endl;
    Image result(*this);
-   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
       int avg = (px.r + px.g + px.b) / 3;
       px.r = px.g = px.b = avg;
       result.set(idx, px);
    }
-   int Gx[9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
-   int Gy[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-   for (int i = 0; i < result.height(); i++) {
-      for (int j = 0; j < result.width(); j++) {
+   int Gx[3][3] = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+   int Gy[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+   for (int i = 0; i < this->_height; i++) {
+      for (int j = 0; j < this->_width; j++) {
+         int sumNeighborsRedX, sumNeighborsGreenX, sumNeighborsBlueX, sumNeighborsRedY, sumNeighborsGreenY, sumNeighborsBlueY;
+         sumNeighborsRedX = sumNeighborsGreenX = sumNeighborsBlueX = sumNeighborsRedY = sumNeighborsGreenY = sumNeighborsBlueY = 0;
          for (int k = i - 1; k <= i + 1; k++) {
             for (int l = j - 1; l <= j + 1; l++) {
-               int sumNeighborsRedX; int sumNeighborsGreenX; int sumNeighborsBlueX; int sumNeighborsRedY; int sumNeighborsGreenY; int sumNeighborsBlueY;
-               sumNeighborsRedX = sumNeighborsGreenX = sumNeighborsBlueX = sumNeighborsRedY = sumNeighborsGreenY = sumNeighborsBlueY = 0;
-               if (0 <= k && k < result.height() && 0 <= l && l < result.width()) {
-                  Pixel px = result.get(k, l);
-                  int idx = ((k - (i - 1)) * 3) + (l - (j - 1));
-                  sumNeighborsRedX += (int) px.r * Gx[idx];
-                  sumNeighborsGreenX += (int) px.g * Gx[idx];
-                  sumNeighborsBlueX += (int) px.b * Gx[idx];
-                  sumNeighborsRedY += (int) px.r * Gy[idx];
-                  sumNeighborsGreenY += (int) px.g * Gy[idx];
-                  sumNeighborsBlueY += (int) px.b * Gy[idx];
+               if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
+                  Pixel px = this->get(k, l);
+                  sumNeighborsRedX += (int) px.r * Gx[k - (i - 1)][l - (j - 1)];
+                  sumNeighborsGreenX += (int) px.g * Gx[k - (i - 1)][l - (j - 1)];
+                  sumNeighborsBlueX += (int) px.b * Gx[k - (i - 1)][l - (j - 1)];
+                  sumNeighborsRedY += (int) px.r * Gy[k - (i - 1)][l - (j - 1)];
+                  sumNeighborsGreenY += (int) px.g * Gy[k - (i - 1)][l - (j - 1)];
+                  sumNeighborsBlueY += (int) px.b * Gy[k - (i - 1)][l - (j - 1)];
                } 
-               unsigned char GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
-               unsigned char GGreen = std::min((int) sqrt(pow(sumNeighborsGreenX, 2) + pow(sumNeighborsGreenY, 2)), 255);
-               unsigned char GBlue = std::min((int) sqrt(pow(sumNeighborsBlueX, 2) + pow(sumNeighborsBlueY, 2)), 255);
-               result.set(i, j, {GRed, GGreen, GBlue});
             }
          }
+         unsigned char GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
+         unsigned char GGreen = std::min((int) sqrt(pow(sumNeighborsGreenX, 2) + pow(sumNeighborsGreenY, 2)), 255);
+         unsigned char GBlue = std::min((int) sqrt(pow(sumNeighborsBlueX, 2) + pow(sumNeighborsBlueY, 2)), 255);
+         result.set(i, j, {GRed, GGreen, GBlue});
+      }
+   }
+   return result;
+}
+
+Image Image::glitch() const {
+   std::cout << "Applying Glitch effect" << std::endl;
+   Image result(*this);
+   for (int i = 0; i < result.height(); i++) {
+      unsigned char* begin = result.data() + (i * result.width() * 3);
+      unsigned char* end = begin + ((result.width() - 1) * 3);
+      std::sort((Pixel*) begin, (Pixel*) end, comparePixels);
+   }
+   return result;
+}
+
+bool comparePixels(const Pixel& a, const Pixel& b) {
+   return a.b < b.b;
+}
+
+Image Image::painterly() const {
+   std::cout << "Applying painterly effect" << std::endl;
+   Image result = ((this->blur()).sobel()).alphaBlend(*this, 0.15);
+   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+      Pixel px = result.get(idx);
+      px.r = std::min(px.r + 50, 255);
+      px.g = std::min(px.g + 50, 255);
+      px.b = std::min(px.b + 50, 255);
+      result.set(idx, px);
+   }
+   return result;
+}
+
+Image Image::distort() const {
+   std::cout << "Applying distortion effect" << std::endl;
+   Image result(*this);
+   for (int i = 0; i < this->_height; i++) {
+      for (int j = 0; j < this->_width; j++) {
+         int displacementI = sin(((float) j / this->_width) * 2 * M_PI * 4) * (this->_height / 20);
+         int displacementJ = cos(((float) i / this->_height) * 2 * M_PI * 4) * (this->_width / 20);
+         // std::cout << j << " " << ((float) j / this->_width) * 2 * M_PI * 4 * this->_width / 4 << " " << displacement << std::endl;
+         int newI;
+         if (i + displacementI >= 0 && i + displacementI < result.height()) {
+            newI = i + displacementI;
+         } else {
+            newI = i;
+         }
+         int newJ;
+         if (j + displacementJ >= 0 && j + displacementJ < result.width()) {
+            newJ = j + displacementJ;
+         } else {
+            newJ = j;
+         }
+         // std::cout << i << " " << displacement << " " << newI << std::endl;
+         Pixel temp = result.get(newI, newJ);
+         result.set(newI, newJ, result.get(i, j));
+         result.set(i, j, temp);
       }
    }
    return result;

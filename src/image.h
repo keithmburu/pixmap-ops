@@ -25,6 +25,8 @@ struct Pixel {
     unsigned char b;
 };
 
+bool comparePixels(const Pixel& a, const Pixel& b);
+
 /**
  * @brief Implements loading, modifying, and saving RGB images
  */
@@ -197,7 +199,10 @@ class Image {
   Image fill(const Pixel& c);
 
   // Apply simple box blur to image 
-  Image blur(int iters = 1) const;
+  Image blur() const;
+
+  // Apply gaussian blur to image 
+  Image blurGaussian() const;
 
   // Apply glowing texture to image
   Image glow() const;
@@ -207,6 +212,15 @@ class Image {
 
   // Accentuate edges in image
   Image sobel() const;
+
+  // Generate corrupted version of image
+  Image glitch() const;
+
+  // Make image look more like a painting 
+  Image painterly() const;
+
+  // Displace pixels based on sine and cosine
+  Image distort() const;
 
  private:
    // char array for storing pixel data
