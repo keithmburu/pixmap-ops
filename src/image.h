@@ -222,6 +222,12 @@ class Image {
   // Displace pixels based on sine and cosine
   Image distort() const;
 
+  // Apply color gradient
+  Image gradient(const std::string& orientation, const Pixel& px) const;
+
+  // Sharpen image
+  Image sharpen() const;
+
  private:
    // char array for storing pixel data
    unsigned char* _data;

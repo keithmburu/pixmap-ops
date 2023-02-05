@@ -70,7 +70,7 @@ std::ostream& operator<<(std::ostream& os, const Image& image) {
 }
 
 Image::~Image() {
-   std::cout << "Freeing memory" << std::endl;
+   std::cout << "~ Freeing memory" << std::endl;
    if (this->_data) {
       free(this->_data);
    }
@@ -217,17 +217,15 @@ Image Image::subimage(int startx, int starty, int w, int h) const {
 
 void Image::replace(const Image& image, int startx, int starty) {
    std::cout << "Replacing with " << image.width() << " by " << image.height() << " image starting from (" << startx << ", " << starty << ")" << std::endl;
-   if (this->_width - startx >= image.width() && this->_height - starty >= image.height()) {
-      for (int i = starty; i < starty + image.height(); i++) {
-         for (int j = startx; j < startx + image.width(); j++) {
-            int idx1 = (i * this->_width) + j;
-            int idx2 = ((i - starty) * image.width()) + (j - startx);
-            Pixel px2 = image.get(idx2);
-            this->set(idx1, px2);
-         }
+   int height = std::min(image.height(), this->_height - starty);
+   int width = std::min(image.width(), this->_width - startx);
+   for (int i = starty; i < starty + height; i++) {
+      for (int j = startx; j < startx + width; j++) {
+         int idx1 = (i * this->_width) + j;
+         int idx2 = ((i - starty) * width) + (j - startx);
+         Pixel px2 = image.get(idx2);
+         this->set(idx1, px2);
       }
-   } else {
-      std::cout << "Image does not fit on this image!" << std::endl;
    }
 }
 
@@ -445,7 +443,7 @@ Image Image::blur() const {
    std::cout << "Blurring" << std::endl;
    Image result(*this);
    int ITERS = 1;
-   int KERNEL_SIZE = 21;
+   int KERNEL_SIZE = 3;
    int offset = KERNEL_SIZE / 2;
    for (int iter = 0; iter < ITERS; iter++) {
       for (int i = 0; i < this->_height; i++) {
@@ -479,7 +477,7 @@ Image Image::blurGaussian() const {
    std::cout << "Blurring with Gaussian blur" << std::endl;
    Image result(*this);
    float STD_DEV = 10.0;
-   int KERNEL_SIZE = 101;
+   int KERNEL_SIZE = 11;
    float kernel[KERNEL_SIZE][KERNEL_SIZE];
    float kernelSum = 0.0;
    int offset = KERNEL_SIZE / 2;
@@ -488,16 +486,14 @@ Image Image::blurGaussian() const {
          float exponent = -(k * k + l * l) / (2 * STD_DEV * STD_DEV);
          kernel[k + offset][l + offset] = (1 / (2 * M_PI * STD_DEV * STD_DEV)) * exp(exponent);
          kernelSum += kernel[k + offset][l + offset];
-         std::cout << kernel[k + offset][l + offset] << " ";
      }
-     std::cout << std::endl;
    }
    for (int i = 0; i < KERNEL_SIZE; i++) {
       for (int j = 0; j < KERNEL_SIZE; j++) {
          kernel[i][j] /= kernelSum;
-         std::cout << kernel[i][j] << " ";
+         // std::cout << kernel[i][j] << " ";
       }
-      std::cout << std::endl;
+      // std::cout << std::endl;
    }
 
    int ITERS = 1;
@@ -535,12 +531,11 @@ Image Image::glow() const {
          white.set(idx, {0, 0, 0});
       }
    }
-   white.save("earth-white.png");
-   white.blur().save("earth-white-blur.png");
-   white.blurGaussian().save("earth-white-blurGaussian.png");
-   // return this->alphaBlend(white.blur(), 0.5);
-   return this->add(white.blur());
-   // return this->alphaBlend(white.blurGaussian(), 0.25);
+   white.save("white.png");
+   white.blur().save("white-blur.png");
+   white.blurGaussian().save("white-blurGaussian.png");
+   // return this->alphaBlend(white.blurGaussian(), 0.5);
+   return this->add(white.blurGaussian());
 }
 
 Image Image::border(const Pixel& c) const {
@@ -613,7 +608,7 @@ bool comparePixels(const Pixel& a, const Pixel& b) {
 
 Image Image::painterly() const {
    std::cout << "Applying painterly effect" << std::endl;
-   Image result = ((this->blur()).sobel()).alphaBlend(*this, 0.15);
+   Image result = ((this->blurGaussian()).sobel()).alphaBlend(*this, 0.15);
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel px = result.get(idx);
       px.r = std::min(px.r + 50, 255);
@@ -631,7 +626,6 @@ Image Image::distort() const {
       for (int j = 0; j < this->_width; j++) {
          int displacementI = sin(((float) j / this->_width) * 2 * M_PI * 4) * (this->_height / 20);
          int displacementJ = cos(((float) i / this->_height) * 2 * M_PI * 4) * (this->_width / 20);
-         // std::cout << j << " " << ((float) j / this->_width) * 2 * M_PI * 4 * this->_width / 4 << " " << displacement << std::endl;
          int newI;
          if (i + displacementI >= 0 && i + displacementI < result.height()) {
             newI = i + displacementI;
@@ -644,13 +638,38 @@ Image Image::distort() const {
          } else {
             newJ = j;
          }
-         // std::cout << i << " " << displacement << " " << newI << std::endl;
          Pixel temp = result.get(newI, newJ);
          result.set(newI, newJ, result.get(i, j));
          result.set(i, j, temp);
       }
    }
    return result;
+}
+
+Image Image::gradient(const std::string& orientation, const Pixel& px) const {
+   std::cout << "Applying " << orientation << " color gradient with color " << (int) px.r << " " << (int) px.g << " " << (int) px.b << std::endl;
+   Image filter(*this);
+   float progress;
+   for (int i = 0; i < this->_height; i++) {
+      if (orientation == "vertical") {
+         progress = (float) i / this->_height;
+      }
+      for (int j = 0; j < this->_width; j++) {
+         if (orientation == "horizontal") {
+            progress = (float) j / this->_width;
+         }
+         unsigned char r = (unsigned char) (px.r * progress);
+         unsigned char g = (unsigned char) (px.g * progress);
+         unsigned char b = (unsigned char) (px.b * progress);
+         filter.set(i, j, {r, g, b});
+      }
+   }
+   return this->alphaBlend(filter, 0.5);
+}
+
+Image Image::sharpen() const {
+   std::cout << "Sharpening" << std::endl;
+   return this->add(this->subtract(this->blur()));
 }
 
 }  // namespace agl

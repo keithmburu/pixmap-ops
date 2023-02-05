@@ -11,12 +11,14 @@ using namespace agl;
 
 int main(int argc, char** argv)
 { 
-   Image art;
-   if (!art.load("../images/earth.png")) {
-      std::cout << "ERROR: Cannot load image! Exiting...\n";
-      exit(0);
-   }
-   art = art.bitmap().distort().painterly();
+   Image earth;
+   earth.load("../images/earth.png");
+   Image rose;
+   rose.load("../images/rose.jpg");
+   Image roseSmall = rose.resize(200, 200);
+
+   Image art = earth.sharpen().colorJitter(10).distort().painterly();
+   art.replace(roseSmall.sobel().bitmap(5), (earth.width() - roseSmall.width()) / 2, (earth.height() - roseSmall.height()) / 2);
    art.save("earth-art.png");
 
    return 0;

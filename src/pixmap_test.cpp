@@ -52,9 +52,15 @@ int main(int argc, char** argv)
    }
    std::cout << "\nearth toString: \n" << image << std::endl;
 
+   Image rose;
+   rose.load("../images/rose.jpg");
+   std::cout << "\nrose toString: \n" << rose << std::endl;
+
    // resize
    Image resize = image.resize(200,300);
    resize.save("earth-200-300.png");
+   Image resize2 = rose.resize(300,200);
+   resize2.save("rose-300-200.png");
 
    // grayscale
    Image grayscale = image.grayscale(); 
@@ -71,6 +77,8 @@ int main(int argc, char** argv)
    // sub image
    Image sub = image.subimage(200, 200, 100, 100); 
    sub.save("earth-subimage.png"); 
+   Image sub2 = rose.subimage(150, 150, 150, 150); 
+   sub2.save("rose-subimage.png"); 
 
    // gamma correction
    Image gamma1 = image.gammaCorrect(0.6f); 
@@ -86,14 +94,20 @@ int main(int argc, char** argv)
    // swirl
    Image swirl = image.swirl();
    swirl.save("earth-swirl.png");
+   Image swirl2 = rose.swirl();
+   swirl2.save("rose-swirl.png");
 
    // color jitter
    Image colorJitter = image.colorJitter(50);
    colorJitter.save("earth-colorJitter.png"); 
+   Image colorJitter2 = rose.colorJitter(100);
+   colorJitter2.save("rose-colorJitter.png"); 
 
    // blur
    Image blur = image.blur();
    blur.save("earth-blur.png"); 
+   Image blur2 = rose.blur();
+   blur2.save("rose-blur.png"); 
 
    // gaussian blur
    Image blurGaussian = image.blurGaussian();
@@ -102,6 +116,8 @@ int main(int argc, char** argv)
    // glow
    Image glow = image.glow();
    glow.save("earth-glow.png"); 
+   Image glow2 = rose.glow();
+   glow2.save("rose-glow.png"); 
 
    // border
    Image border = image.border({255, 255, 255});
@@ -110,7 +126,8 @@ int main(int argc, char** argv)
    // sobel
    Image sobel = image.sobel();
    sobel.save("earth-sobel.png"); 
-
+   Image sobel2 = rose.sobel();
+   sobel2.save("rose-sobel.png"); 
 
    // bitmap
    Image bitmap = image.bitmap(10);
@@ -119,39 +136,42 @@ int main(int argc, char** argv)
    // fill
    Image fill = image.fill({255, 0, 0});
    fill.save("earth-fill.png"); 
+   Image fill2 = rose.fill({0, 255, 0});
+   fill2.save("rose-fill.png"); 
 
    // glitch
    Image glitch = image.glitch();
    glitch.save("earth-glitch.png"); 
+   Image glitch2 = rose.glitch();
+   glitch2.save("rose-glitch.png"); 
 
    // painterly
    Image painterly = image.painterly();
    painterly.save("earth-painterly.png"); 
+   Image painterly2 = rose.painterly();
+   painterly2.save("rose-painterly.png"); 
 
    // distort
    Image distort = image.distort();
    distort.save("earth-distort.png"); 
+   Image distort2 = rose.distort();
+   distort2.save("rose-distort.png"); 
 
+   // gradient
+   Image vgradient = image.gradient("vertical", {255, 255, 255});
+   vgradient.save("earth-vgradient.png"); 
+   Image hgradient = image.gradient("horizontal", {0, 0, 255});
+   hgradient.save("earth-hgradient.png"); 
+
+   // sharpen
+   Image sharpen = image.sharpen();
+   sharpen.save("earth-sharpen.png");
+   Image sharpen2 = rose.sharpen();
+   sharpen2.save("rose-sharpen.png"); 
 
    Image soup;
    soup.load("../images/soup.png");
    std::cout << "\nsoup toString: \n" << soup << std::endl;
-
-   // // glitch
-   // Image soupGlitch = soup.glitch();
-   // soupGlitch.save("soup-glitch.png"); 
-
-   Image rose;
-   rose.load("../images/rose.jpg");
-   std::cout << "\nrose toString: \n" << rose << std::endl;
-
-   // rose sobel
-   Image roseSobel = rose.sobel();
-   roseSobel.save("rose-sobel.png"); 
-
-   // painterly
-   Image rosePainterly = rose.painterly();
-   rosePainterly.save("rose-painterly.png"); 
 
    // add
    Image add = image.add(rose);
@@ -188,7 +208,7 @@ int main(int argc, char** argv)
    background.save("background-test.png");
    Image blend = background.alphaBlend(soup, 0.5f);
    blend.save("blend-test.png");
-   image.replace(blend, x, y);
+   image.replace(blend, x, y); // TODO: test replace with image too large
    image.save("earth-blend-0.5.png");
 }
 
