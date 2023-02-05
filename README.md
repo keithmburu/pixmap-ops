@@ -49,7 +49,7 @@ TODO: Document the features of your PPM image class here. Include example images
 - Resize an image\
 ![](demo/earth-200-300.png)
 - Flip an image horizontally or vertically\
-![](demo/earth-flip.png | width=100)
+![img|100x100](demo/earth-flip.png)
 ![](demo/earth-vflip.png)
 - Rotate an image 90 degrees\
 ![](demo/earth-rotate90.png)
