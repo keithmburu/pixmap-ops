@@ -19,22 +19,22 @@ int main(int argc, char** argv)
    soup.load("../images/soup.png");
    Image bricks;
    bricks.load("../images/bricks.png");
-   Image meme;
-   meme.load("../images/meme.jpg");
+   Image abstract;
+   abstract.load("../images/abstract.jpg");
    
    // Image roseSmall = rose.resize(200, 200);
    // Image art1 = earth.sharpen().colorJitter(30).distort().painterly();
    // art1.replace(roseSmall.sobel().bitmap(3), (earth.width() - roseSmall.width()) / 2, (earth.height() - roseSmall.height()) / 2);
-   // art1.save("art-1.png");
+   // art1.save("../art/art-1.png");
 
    // Image art2 = rose.blur().colorJitter(10).distort().sobel();
-   // art2.save("art-2.png");
+   // art2.save("../art/art-2.png");
 
    // Image art3 = bricks.glitch().gradient("vertical", {255, 255, 255}).gradient("horizontal", {255, 0, 0}).bitmap(10).sobel().distort();
-   // art3.save("art-3.png");
+   // art3.save("../art/art-3.png");
 
-   Image art4 = meme.deepFried();
-   art4.save("art-4.png");
+   Image art4 = abstract.distort();
+   art4.save("../art/art-4.png");
 
    return 0;
 }
