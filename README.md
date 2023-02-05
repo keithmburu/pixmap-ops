@@ -60,7 +60,7 @@ pixmap-ops/build $ ../bin/pixmap_art
 ![](demo/earth-swirl.png)
 - Convert an image to grayscale\
 ![](demo/earth-grayscale.png)
-- Add border around an image\
+- Add a border around an image\
 ![](demo/earth-border.png)
 - Invert colors of an image\
 ![](demo/earth-invert.png)
