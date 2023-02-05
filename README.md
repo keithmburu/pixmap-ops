@@ -47,34 +47,66 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 TODO: Document the features of your PPM image class here. Include example images.
 - Resize an image.
+![](demo/earth-200-300.png)
 - Flip an image horizontally or vertically.
+![](demo/earth-flip.png)
+![](demo/earth-vflip.png)
 - Rotate an image 90 degrees.
+![](demo/earth-rotate90.png)
 - Get a sub-image from a given image.
+![](demo/earth-subimage.png)
 - Replace a portion of an image with another image.
+![](demo/bricks-replace-earth.png)
 - Swirl the colors of an image.
+![](demo/earth-swirl.png)
 - Convert an image to grayscale
+![](demo/earth-grayscale.png)
 - Add border around an image
+![](demo/earth-border.png)
 - Invert colors of an image
+![](demo/earth-invert.png)
 - Gamma correct an image
+![](demo/earth-gamma-0.6.png)
+![](demo/earth-gamma-2.2.png)
 - Blend two images together
+![](demo/blend-test.png)
 - Apply glow effect to an image
+![](demo/earth-glow.png)
 - Apply sobel operator to an image
+![](demo/earth-sobel.png)
 - Apply painterly effect to an image
+![](demo/earth-painterly.png)
 - Create a pixelated version of a image
+![](demo/earth-bitmap.png)
 - Fill the white in an image with another color
+![](demo/earth-fill.png)
 - Jitter the colors in an image
+![](demo/earth-colorJitter.png)
 - Add two images together.
+![](demo/earth-rose-add.png)
 - Subtract two images.
+![](demo/earth-rose-subtract.png)
 - Find the difference between two images (absolute value).
+![](demo/earth-rose-difference.png)
 - Multiply two images.
+![](demo/earth-rose-multiply.png)
 - Brighten an image.
+![](demo/earth-brighten.png)
 - Dim an image.
+![](demo/earth-dim.png)
 - Sharpen an image.
+![](demo/earth-sharpen.png)
 - Apply a vertical or horizontal gradient to an image
+![](demo/earth-vgradient.png)
+![](demo/earth-hgradient.png)
 - Blur an image using box blur or Gaussian blur
+![](demo/earth-blurGaussian.png)
 - Glitch an image
+![](demo/earth-glitch.png)
 - Distort an image
+![](demo/earth-distort.png)
 - "Deep fry" an image
+![](demo/earth-deepfry.png)
 
 ## Results
 
