@@ -33,7 +33,7 @@ int main(int argc, char** argv)
    // Image art3 = bricks.glitch().gradient("vertical", {255, 255, 255}).gradient("horizontal", {255, 0, 0}).bitmap(10).sobel().distort();
    // art3.save("../art/art-3.png");
 
-   Image art4 = abstract.glitch();
+   Image art4 = abstract.swirl().sobel().invert();
    art4.save("../art/art-4.png");
 
    return 0;
