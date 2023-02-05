@@ -2,7 +2,7 @@
 
 Image manipulation demos based on the PPM image format.
 
-TODO: Add a representative image for your project here
+![](art/art-4.png)
 
 ## How to build
 
@@ -45,7 +45,6 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 ## Image operators
 
-TODO: Document the features of your PPM image class here. Include example images.
 - Resize an image\
 ![](demo/earth-200-300.png)
 - Flip an image horizontally or vertically\
@@ -110,5 +109,7 @@ TODO: Document the features of your PPM image class here. Include example images
 
 ## Results
 
-TODO: Show artworks using your class
+![](art/art-1.png)\
+![](art/art-2.png)\
+![](art/art-3.png)\
 
