@@ -14,17 +14,17 @@ int main(int argc, char** argv)
 {
    Image image;
    if (!image.load("../images/feep.png")) {
-      std::cout << "ERROR: Cannot load image! Exiting...\n";
+      cout << "ERROR: Cannot load image! Exiting...\n";
       exit(0);
    }
-   std::cout << "feep toString: \n" << image << std::endl;
+   cout << "feep toString: \n" << image << endl;
 
    for (int i = 0; i < image.height(); i++) {
       for (int j = 0; j < image.width(); j++) {
          Pixel c = image.get(i, j);
-         std::cout << "(" << (int)c.r << "," << (int)c.g << "," << (int)c.b << ") ";
+         cout << "(" << (int)c.r << "," << (int)c.g << "," << (int)c.b << ") ";
       }
-      std::cout << std::endl;
+      cout << endl;
    }
    image.save("feep-test-save.png"); // should match original
 
@@ -47,14 +47,14 @@ int main(int argc, char** argv)
 
    // test a non-trivial image
    if (!image.load("../images/earth.png")) {
-      std::cout << "ERROR: Cannot load image! Exiting...\n";
+      cout << "ERROR: Cannot load image! Exiting...\n";
       exit(0);
    }
-   std::cout << "\nearth toString: \n" << image << std::endl;
+   cout << "\nearth toString: \n" << image << endl;
 
    Image rose;
    rose.load("../images/rose.jpg");
-   std::cout << "\nrose toString: \n" << rose << std::endl;
+   cout << "\nrose toString: \n" << rose << endl;
 
    // resize
    Image resize = image.resize(200,300);
@@ -169,9 +169,21 @@ int main(int argc, char** argv)
    Image sharpen2 = rose.sharpen();
    sharpen2.save("rose-sharpen.png"); 
 
+   // brighten
+   Image brighten = image.brighten(30);
+   brighten.save("earth-brighten.png");
+   Image brighten2 = rose.brighten(20);
+   brighten2.save("rose-brighten.png"); 
+
+   // dim
+   Image dim = image.dim(20);
+   dim.save("earth-dim.png");
+   Image dim2 = rose.dim(30);
+   dim2.save("rose-dim.png"); 
+
    Image soup;
    soup.load("../images/soup.png");
-   std::cout << "\nsoup toString: \n" << soup << std::endl;
+   cout << "\nsoup toString: \n" << soup << endl;
 
    // add
    Image add = image.add(rose);
@@ -208,7 +220,12 @@ int main(int argc, char** argv)
    background.save("background-test.png");
    Image blend = background.alphaBlend(soup, 0.5f);
    blend.save("blend-test.png");
-   image.replace(blend, x, y); // TODO: test replace with image too large
+   image.replace(blend, x, y); 
    image.save("earth-blend-0.5.png");
+   
+   Image bricks;
+   bricks.load("../images/bricks.png");
+   bricks.replace(image, 100, 100);
+   bricks.save("bricks-replace-earth.png");
 }
 

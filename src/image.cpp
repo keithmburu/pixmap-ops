@@ -221,10 +221,8 @@ void Image::replace(const Image& image, int startx, int starty) {
    int width = std::min(image.width(), this->_width - startx);
    for (int i = starty; i < starty + height; i++) {
       for (int j = startx; j < startx + width; j++) {
-         int idx1 = (i * this->_width) + j;
-         int idx2 = ((i - starty) * width) + (j - startx);
-         Pixel px2 = image.get(idx2);
-         this->set(idx1, px2);
+         Pixel px2 = image.get(i - starty, j - startx);
+         this->set(i, j, px2);
       }
    }
 }
@@ -384,10 +382,7 @@ Image Image::colorJitter(int size) const {
    Image result(*this);
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      int jitter = rand() % size;
-      if (jitter % 2 == 0) {
-         jitter = -jitter;
-      }
+      int jitter = pow(-1, jitter % 2) * (rand() % size);
       px.r = std::min(px.r + jitter, 255);
       px.g = std::min(px.g + jitter, 255);
       px.b = std::min(px.b + jitter, 255);
@@ -608,15 +603,7 @@ bool comparePixels(const Pixel& a, const Pixel& b) {
 
 Image Image::painterly() const {
    std::cout << "Applying painterly effect" << std::endl;
-   Image result = ((this->blurGaussian()).sobel()).alphaBlend(*this, 0.15);
-   for (int idx = 0; idx < result.width() * result.height(); idx++) {
-      Pixel px = result.get(idx);
-      px.r = std::min(px.r + 50, 255);
-      px.g = std::min(px.g + 50, 255);
-      px.b = std::min(px.b + 50, 255);
-      result.set(idx, px);
-   }
-   return result;
+  return (((this->blurGaussian()).sobel()).alphaBlend(*this, 0.2)).brighten(20);
 }
 
 Image Image::distort() const {
@@ -670,6 +657,48 @@ Image Image::gradient(const std::string& orientation, const Pixel& px) const {
 Image Image::sharpen() const {
    std::cout << "Sharpening" << std::endl;
    return this->add(this->subtract(this->blur()));
+}
+
+Image Image::brighten(int percentage) const {
+   std::cout << "Brightening by " << percentage << " percent" << std::endl;
+   Image result(*this);
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
+      Pixel px = this->get(idx);
+      px.r = std::min(px.r * (100 + percentage) / 100, 255);
+      px.g = std::min(px.g  * (100 + percentage) / 100, 255);
+      px.b = std::min(px.b  * (100 + percentage) / 100, 255);
+      result.set(idx, px);
+   }
+   return result;
+}
+
+Image Image::dim(int percentage) const {
+   std::cout << "Dimming by " << percentage << " percent" << std::endl;
+   Image result(*this);
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
+      Pixel px = this->get(idx);
+      px.r = px.r * (100 - percentage) / 100;
+      px.g = px.g  * (100 - percentage) / 100;
+      px.b = px.b  * (100 - percentage) / 100;
+      result.set(idx, px);
+   }
+   return result;
+}
+
+Image Image::deepFried() const {
+   std::cout << "Applying deep fried effect" << std::endl;
+   Image result(*this);
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
+      Pixel px = this->get(idx);
+      px.r = std::min(px.r * 2, 255);
+      px.r = (int) (pow(px.r / 255.0, 15) * 255);
+      px.g = std::min(px.g * 2, 255);
+      px.g = (int) (pow(px.g / 255.0, 15) * 255);
+      px.b = std::min(px.b * 2, 255);
+      px.b = (int) (pow(px.b / 255.0, 15) * 255);
+      result.set(idx, px);
+   }
+   return result;
 }
 
 }  // namespace agl

@@ -15,11 +15,26 @@ int main(int argc, char** argv)
    earth.load("../images/earth.png");
    Image rose;
    rose.load("../images/rose.jpg");
-   Image roseSmall = rose.resize(200, 200);
+   Image soup;
+   soup.load("../images/soup.png");
+   Image bricks;
+   bricks.load("../images/bricks.png");
+   Image meme;
+   meme.load("../images/meme.jpg");
+   
+   // Image roseSmall = rose.resize(200, 200);
+   // Image art1 = earth.sharpen().colorJitter(30).distort().painterly();
+   // art1.replace(roseSmall.sobel().bitmap(3), (earth.width() - roseSmall.width()) / 2, (earth.height() - roseSmall.height()) / 2);
+   // art1.save("art-1.png");
 
-   Image art = earth.sharpen().colorJitter(10).distort().painterly();
-   art.replace(roseSmall.sobel().bitmap(5), (earth.width() - roseSmall.width()) / 2, (earth.height() - roseSmall.height()) / 2);
-   art.save("earth-art.png");
+   // Image art2 = rose.blur().colorJitter(10).distort().sobel();
+   // art2.save("art-2.png");
+
+   // Image art3 = bricks.glitch().gradient("vertical", {255, 255, 255}).gradient("horizontal", {255, 0, 0}).bitmap(10).sobel().distort();
+   // art3.save("art-3.png");
+
+   Image art4 = meme.deepFried();
+   art4.save("art-4.png");
 
    return 0;
 }

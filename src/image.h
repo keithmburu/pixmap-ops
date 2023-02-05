@@ -225,8 +225,16 @@ class Image {
   // Apply color gradient
   Image gradient(const std::string& orientation, const Pixel& px) const;
 
-  // Sharpen image
+  // Emphasize edges in image using unsharp mask filtering
   Image sharpen() const;
+
+  // Increase all pixel values by fixed percentage
+  Image brighten(int percentage) const;
+
+  // Decrease all pixel values by fixed percentage
+  Image dim(int percentage) const;
+
+  Image deepFried() const;
 
  private:
    // char array for storing pixel data
