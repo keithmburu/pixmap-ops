@@ -78,7 +78,7 @@ TODO: Document the features of your PPM image class here. Include example images
 ![](demo/earth-painterly.png)
 - Create a pixelated version of a image\
 ![](demo/earth-bitmap.png)
-- Fill the white in an image with another color\
+- Fill one color in an image with another color\
 ![](demo/earth-fill.png)
 - Jitter the colors in an image\
 ![](demo/earth-colorJitter.png)
