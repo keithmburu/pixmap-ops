@@ -134,9 +134,9 @@ int main(int argc, char** argv)
    bitmap.save("../demo/earth-bitmap.png"); 
 
    // fill
-   Image fill = image.fill({255, 0, 0});
+   Image fill = image.fill({255, 255, 255}, {255, 0, 0});
    fill.save("../demo/earth-fill.png"); 
-   Image fill2 = rose.fill({0, 255, 0});
+   Image fill2 = rose.fill({255, 255, 255}, {0, 0, 255});
    fill2.save("../demo/rose-fill.png"); 
 
    // glitch

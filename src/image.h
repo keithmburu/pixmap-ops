@@ -195,8 +195,8 @@ class Image {
   // return a bitmap version of this image
   Image bitmap(int size) const;
 
-  // Fill this image with a color
-  Image fill(const Pixel& c);
+  // Fill pixels of certain color with another color
+  Image fill(const Pixel& a, const Pixel& b);
 
   // Apply simple box blur to image 
   Image blur() const;

@@ -419,15 +419,18 @@ Image Image::bitmap(int size) const {
    return result;
 }
 
-Image Image::fill(const Pixel& c) {
-   std::cout << "Filling with color " << (int) c.r << " " << (int) c.g << " " << (int) c.b << std::endl;
+Image Image::fill(const Pixel& a, const Pixel& b) {
+   std::cout << "Filling color " << (int) b.r << " " << (int) b.g << " " << (int) b.b << " with color " << (int) b.r << " " << (int) b.g << " " << (int) b.b << std::endl;
    Image result(*this);
-   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+   for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      if (px.r > 100 && px.g > 100 && px.b > 100) {
-         px.r = c.r;
-         px.g = c.g;
-         px.b = c.b;
+      int diffR = abs(a.r - px.r);
+      int diffG = abs(a.g - px.g);
+      int diffB = abs(a.b - px.b);
+      if (diffR < 100 && diffG < 100 && diffB < 100) {
+         px.r = b.r;
+         px.g = b.g;
+         px.b = b.b;
       }
       result.set(idx, px);
    }
