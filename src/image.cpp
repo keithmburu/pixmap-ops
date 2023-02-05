@@ -478,8 +478,8 @@ Image Image::blur() const {
 Image Image::blurGaussian() const {
    std::cout << "Blurring with Gaussian blur" << std::endl;
    Image result(*this);
-   float STD_DEV = 1.0;
-   int KERNEL_SIZE = 3;
+   float STD_DEV = 10.0;
+   int KERNEL_SIZE = 101;
    float kernel[KERNEL_SIZE][KERNEL_SIZE];
    float kernelSum = 0.0;
    int offset = KERNEL_SIZE / 2;
@@ -504,7 +504,7 @@ Image Image::blurGaussian() const {
    for (int iter = 0; iter < ITERS; iter++) {
       for (int i = 0; i < this->_height; i++) {
          for (int j = 0; j < this->_width; j++) {
-            int avgNeighborsRed, avgNeighborsGreen, avgNeighborsBlue;
+            float avgNeighborsRed, avgNeighborsGreen, avgNeighborsBlue;
             avgNeighborsRed = avgNeighborsGreen = avgNeighborsBlue = 0;
             for (int k = i - offset; k <= i + offset; k++) {
                for (int l = j - offset; l <= j + offset; l++) {
@@ -538,8 +538,8 @@ Image Image::glow() const {
    white.save("earth-white.png");
    white.blur().save("earth-white-blur.png");
    white.blurGaussian().save("earth-white-blurGaussian.png");
-   return this->alphaBlend(white.blur(), 0.5);
-   // return this->add(white.blur());
+   // return this->alphaBlend(white.blur(), 0.5);
+   return this->add(white.blur());
    // return this->alphaBlend(white.blurGaussian(), 0.25);
 }
 
