@@ -46,67 +46,67 @@ pixmap-ops/build $ ../bin/pixmap_art
 ## Image operators
 
 TODO: Document the features of your PPM image class here. Include example images.
-- Resize an image.
+- Resize an image\
 ![](demo/earth-200-300.png)
-- Flip an image horizontally or vertically.
-![](demo/earth-flip.png)
+- Flip an image horizontally or vertically\
+![](demo/earth-flip.png | width=100)
 ![](demo/earth-vflip.png)
-- Rotate an image 90 degrees.
+- Rotate an image 90 degrees\
 ![](demo/earth-rotate90.png)
-- Get a sub-image from a given image.
+- Get a sub-image from a given image\
 ![](demo/earth-subimage.png)
-- Replace a portion of an image with another image.
+- Replace a portion of an image with another image\
 ![](demo/bricks-replace-earth.png)
-- Swirl the colors of an image.
+- Swirl the colors of an image\
 ![](demo/earth-swirl.png)
-- Convert an image to grayscale
+- Convert an image to grayscale\
 ![](demo/earth-grayscale.png)
-- Add border around an image
+- Add border around an image\
 ![](demo/earth-border.png)
-- Invert colors of an image
+- Invert colors of an image\
 ![](demo/earth-invert.png)
-- Gamma correct an image
+- Gamma correct an image\
 ![](demo/earth-gamma-0.6.png)
 ![](demo/earth-gamma-2.2.png)
-- Blend two images together
+- Blend two images together\
 ![](demo/blend-test.png)
-- Apply glow effect to an image
+- Apply glow effect to an image\
 ![](demo/earth-glow.png)
-- Apply sobel operator to an image
+- Apply sobel operator to an image\
 ![](demo/earth-sobel.png)
-- Apply painterly effect to an image
+- Apply painterly effect to an image\
 ![](demo/earth-painterly.png)
-- Create a pixelated version of a image
+- Create a pixelated version of a image\
 ![](demo/earth-bitmap.png)
-- Fill the white in an image with another color
+- Fill the white in an image with another color\
 ![](demo/earth-fill.png)
-- Jitter the colors in an image
+- Jitter the colors in an image\
 ![](demo/earth-colorJitter.png)
-- Add two images together.
+- Add two images together\
 ![](demo/earth-rose-add.png)
-- Subtract two images.
+- Subtract two images\
 ![](demo/earth-rose-subtract.png)
-- Find the difference between two images (absolute value).
+- Find the difference between two images (absolute value)\
 ![](demo/earth-rose-difference.png)
-- Multiply two images.
+- Multiply two images\
 ![](demo/earth-rose-multiply.png)
-- Brighten an image.
+- Brighten an image\
 ![](demo/earth-brighten.png)
-- Dim an image.
+- Dim an image\
 ![](demo/earth-dim.png)
-- Sharpen an image.
+- Sharpen an image\
 ![](demo/earth-sharpen.png)
-- Apply a vertical or horizontal gradient to an image
+- Apply a vertical or horizontal gradient to an image\
 ![](demo/earth-vgradient.png)
 ![](demo/earth-hgradient.png)
-- Blur an image using box blur or Gaussian blur
+- Blur an image using box blur or Gaussian blur\
 ![](demo/earth-blurGaussian.png)
-- Glitch an image
+- Glitch an image\
 ![](demo/earth-glitch.png)
-- Distort an image
+- Distort an image\
 ![](demo/earth-distort.png)
-- "Deep fry" an image
-![](demo/earth-deepfry.png)
+- "Deep fry" an image\
+![](demo/meme-deepfried.png)
 
 ## Results
 
