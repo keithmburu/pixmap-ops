@@ -11,8 +11,8 @@ using namespace agl;
 
 int main(int argc, char** argv)
 { 
-   Image earth;
-   earth.load("../images/earth.png");
+   // Image earth;
+   // earth.load("../images/earth.png");
    // Image rose;
    // rose.load("../images/rose.jpg");
    // Image soup;
@@ -67,8 +67,8 @@ int main(int argc, char** argv)
    // Image art9 = pebbles.add(space).sobel().glow();
    // art9.save("../art/art-9.png");
 
-   Image art10 = earth.glitch();
-   art10.save("../art/art-10.png");
+   // Image art10 = earth.glitch().fill({255, 255, 255}, {255, 128, 64}).invert().sobel();
+   // art10.save("../art/art-10.png");
 
    return 0;
 }

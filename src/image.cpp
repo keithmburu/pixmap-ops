@@ -420,7 +420,7 @@ Image Image::bitmap(int size) const {
 }
 
 Image Image::fill(const Pixel& a, const Pixel& b) {
-   std::cout << "Filling color " << (int) b.r << " " << (int) b.g << " " << (int) b.b << " with color " << (int) b.r << " " << (int) b.g << " " << (int) b.b << std::endl;
+   std::cout << "Filling color " << (int) a.r << " " << (int) a.g << " " << (int) a.b << " with color " << (int) b.r << " " << (int) b.g << " " << (int) b.b << std::endl;
    Image result(*this);
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
