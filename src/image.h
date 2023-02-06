@@ -183,13 +183,13 @@ class Image {
   // Assumes that the two images are the same size
   Image alphaBlend(const Image& other, float amount) const;
 
-  // Convert the image to grayscale
+  // Replace each pixel value "x" with 255-x
   Image invert() const;
 
   // Convert the image to grayscale
   Image grayscale() const;
 
-  // return a bitmap version of this image
+  // Randomly tweak pixel values with max of "size"
   Image colorJitter(int size) const;
 
   // return a bitmap version of this image
