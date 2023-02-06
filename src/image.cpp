@@ -590,18 +590,18 @@ Image Image::sobel() const {
 }
 
 Image Image::glitch() const {
-   std::cout << "Applying Glitch effect" << std::endl;
-   Image result(*this);
-   for (int i = 0; i < result.height(); i++) {
-      unsigned char* begin = result.data() + (i * result.width() * 3);
-      unsigned char* end = begin + ((result.width() - 1) * 3);
-      std::sort((Pixel*) begin, (Pixel*) end, comparePixels);
+   std::cout << "Applying glitch effect" << std::endl;
+   Image result(this->_width, this->_height);
+   int offset = this->_width / 10;
+   for (int i = 0; i < this->_height; i++) {
+      for (int j = 0; j < this->_width; j++) {
+         int newJ = j + (pow(-1, i % 2) * offset);
+         if (newJ >= 0 && newJ < this->_width) {
+            result.set(i, newJ, this->get(i, j));
+         }
+      }
    }
    return result;
-}
-
-bool comparePixels(const Pixel& a, const Pixel& b) {
-   return a.b < b.b;
 }
 
 Image Image::painterly() const {

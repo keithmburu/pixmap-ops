@@ -11,8 +11,8 @@ using namespace agl;
 
 int main(int argc, char** argv)
 { 
-   // Image earth;
-   // earth.load("../images/earth.png");
+   Image earth;
+   earth.load("../images/earth.png");
    // Image rose;
    // rose.load("../images/rose.jpg");
    // Image soup;
@@ -35,6 +35,8 @@ int main(int argc, char** argv)
    // droplets.load("../images/droplets.png");
    // Image pebbles;
    // pebbles.load("../images/pebbles.png");
+   // Image sunset;
+   // sunset.load("../images/sunset.jpg");
    
    // Image roseSmall = rose.resize(200, 200);
    // Image art1 = earth.deepFried().distort("horizontal").painterly();
@@ -64,6 +66,9 @@ int main(int argc, char** argv)
 
    // Image art9 = pebbles.add(space).sobel().glow();
    // art9.save("../art/art-9.png");
+
+   Image art10 = earth.glitch();
+   art10.save("../art/art-10.png");
 
    return 0;
 }

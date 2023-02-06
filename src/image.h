@@ -25,8 +25,6 @@ struct Pixel {
     unsigned char b;
 };
 
-bool comparePixels(const Pixel& a, const Pixel& b);
-
 /**
  * @brief Implements loading, modifying, and saving RGB images
  */
