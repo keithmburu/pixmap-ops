@@ -46,7 +46,7 @@ int main(int argc, char** argv)
    // Image art2 = rose.gammaCorrect(0.8).colorJitter(20).distort("vertical").sobel();
    // art2.save("../art/art-2.png");
 
-   // Image art3 = bricks.glitch().gradient("vertical", {255, 255, 255}).gradient("horizontal", {255, 0, 0}).bitmap(10).sobel().distort("horizontal").distort("vertical");
+   // Image art3 = bricks.glitch().gradient("vertical", {255, 255, 255}).gradient("horizontal", {255, 0, 0}).bitmap(10).sobel().distort("horizontal").distort("vertical").resize(400, 400);
    // art3.save("../art/art-3.png");
 
    // Image art4 = abstract.swirl().sobel().invert();
