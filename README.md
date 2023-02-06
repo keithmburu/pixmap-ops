@@ -48,7 +48,8 @@ pixmap-ops/build $ ../bin/pixmap_art
 - Resize an image\
 ![](demo/earth-200-300.png)
 - Flip an image horizontally or vertically\
-![img|100x100](demo/earth-flip.png)
+![](demo/earth-flip.png)
+<img src="demo/earth-flip.png" width="100">
 ![](demo/earth-vflip.png)
 - Rotate an image 90 degrees\
 ![](demo/earth-rotate90.png)
