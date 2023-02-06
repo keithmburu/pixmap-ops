@@ -152,9 +152,9 @@ int main(int argc, char** argv)
    painterly2.save("../demo/rose-painterly.png"); 
 
    // distort
-   Image distort = image.distort();
+   Image distort = image.distort("vertical");
    distort.save("../demo/earth-distort.png"); 
-   Image distort2 = rose.distort();
+   Image distort2 = rose.distort("horizontal");
    distort2.save("../demo/rose-distort.png"); 
 
    // gradient

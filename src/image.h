@@ -220,7 +220,7 @@ class Image {
   Image painterly() const;
 
   // Displace pixels based on sine and cosine
-  Image distort() const;
+  Image distort(const std::string& orientation) const;
 
   // Apply color gradient
   Image gradient(const std::string& orientation, const Pixel& px) const;

@@ -609,28 +609,22 @@ Image Image::painterly() const {
   return (((this->blurGaussian()).sobel()).alphaBlend(*this, 0.2)).brighten(20);
 }
 
-Image Image::distort() const {
+Image Image::distort(const std::string& orientation) const {
    std::cout << "Applying distortion effect" << std::endl;
    Image result(*this);
+   if (orientation != "vertical" && orientation != "horizontal") {
+      std::cerr << "Invalid orientation argument!" << std::endl;
+      exit(1);
+   }
    for (int i = 0; i < this->_height; i++) {
       for (int j = 0; j < this->_width; j++) {
-         int displacementI = sin(((float) j / this->_width) * 2 * M_PI * 4) * (this->_height / 20);
-         int displacementJ = cos(((float) i / this->_height) * 2 * M_PI * 4) * (this->_width / 20);
-         int newI;
-         if (i + displacementI >= 0 && i + displacementI < result.height()) {
-            newI = i + displacementI;
-         } else {
-            newI = i;
-         }
-         int newJ;
-         if (j + displacementJ >= 0 && j + displacementJ < result.width()) {
-            newJ = j + displacementJ;
-         } else {
-            newJ = j;
-         }
-         Pixel temp = result.get(newI, newJ);
-         result.set(newI, newJ, result.get(i, j));
-         result.set(i, j, temp);
+         int newI = i; int newJ = j;
+         if (orientation == "vertical") {
+            newI = (i + (int)(sin(((float) j / this->_width) * 8 * M_PI) * 20) + this->_height) % this->_height;
+         } else if (orientation == "horizontal") {
+            newJ = (j + (int)(cos(((float) i / this->_height) * 8 * M_PI) * 20) + this->_width) % this->_width;
+         } 
+         result.set(newI, newJ, this->get(i, j));
       }
    }
    return result;
@@ -639,6 +633,10 @@ Image Image::distort() const {
 Image Image::gradient(const std::string& orientation, const Pixel& px) const {
    std::cout << "Applying " << orientation << " color gradient with color " << (int) px.r << " " << (int) px.g << " " << (int) px.b << std::endl;
    Image filter(*this);
+   if (orientation != "vertical" && orientation != "horizontal") {
+      std::cerr << "Invalid orientation argument!" << std::endl;
+      exit(1);
+   }
    float progress;
    for (int i = 0; i < this->_height; i++) {
       if (orientation == "vertical") {
