@@ -48,8 +48,10 @@ pixmap-ops/build $ ../bin/pixmap_art
 - Resize an image
 <img src="demo/earth-200-300.png" width="400">
 - Flip an image horizontally or vertically
-<img src="demo/earth-flip.png" width="400">
-<img src="demo/earth-vflip.png" width="400">
+<div style="display:flex;">
+  <img src="demo/earth-flip.png" width="400" style="flex:1;">
+  <img src="demo/earth-vflip.png" width="400" style="flex:1;">
+</div>
 - Rotate an image 90 degrees
 <img src="demo/earth-rotate90.png" width="400">
 - Get a sub-image from a given image
@@ -98,10 +100,15 @@ pixmap-ops/build $ ../bin/pixmap_art
 - Sharpen an image
 <img src="demo/earth-sharpen.png" width="400">
 - Apply a vertical or horizontal gradient to an image
-<img src="demo/earth-vgradient.png" width="400">
-<img src="demo/earth-hgradient.png" width="400">
+<div style="display:flex;">
+  <img src="demo/earth-vgradient.png" width="400" style="flex:1;">
+  <img src="demo/earth-hgradient.png" width="400" style="flex:1;">
+</div>
 - Blur an image using box blur or Gaussian blur
-<img src="demo/earth-blurGaussian.png" width="400">
+<div style="display:flex;">
+  <img src="demo/earth-blur.png" width="400" style="flex:1;">
+  <img src="demo/earth-blurGaussian.png" width="400" style="flex:1;">
+</div>
 - Glitch an image
 <img src="demo/earth-glitch.png" width="400">
 - Distort an image
@@ -111,12 +118,16 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 ## Results
 
-![](art/art-3.png)\
-![](art/art-1.png)
-![](art/art-2.png)\
-![](art/art-4.png)\
-![](art/art-5.png)\
-![](art/art-6.png)\
-![](art/art-8.png)
-![](art/art-9.png)\
+<div style="display:flex;">
+  <img src="art/art-1.png" style="flex:1;">
+  <img src="art/art-2.png" style="flex:1;">
+  <img src="art/art-3.png" style="flex:1;">
+</div>
+![](art/art-4.png)
+<div style="display:flex;">
+  <img src="art/art-5.png" style="flex:1;">
+  <img src="art/art-6.png" style="flex:1;">
+  <img src="art/art-8.png" style="flex:1;">
+  <img src="art/art-9.png" style="flex:1;">
+</div>
 
