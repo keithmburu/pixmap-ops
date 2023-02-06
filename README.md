@@ -57,7 +57,7 @@ pixmap-ops/build $ ../bin/pixmap_art
 - Replace a portion of an image with another image
 <img src="demo/bricks-replace-earth.png" width="400">
 - Swirl the colors of an image
-<img src="demo/earth-swirl.png" width="200">
+<img src="demo/earth-swirl.png" width="400">
 - Convert an image to grayscale
 <img src="demo/earth-grayscale.png" width="400">
 - Add a border around an image
@@ -65,8 +65,10 @@ pixmap-ops/build $ ../bin/pixmap_art
 - Invert colors of an image
 <img src="demo/earth-invert.png" width="400">
 - Gamma correct an image
-<img src="demo/earth-gamma-0.6.png" width="400">
-<img src="demo/earth-gamma-2.2.png" width="400">
+<div style="display:flex;">
+  <img src="demo/earth-gamma-0.6.png" width="400" style="flex:1;">
+  <img src="demo/earth-gamma-2.2.png" width="400" style="flex:1;">
+</div>
 - Blend two images together
 <img src="demo/blend-test.png" width="400">
 - Apply glow effect to an image
