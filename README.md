@@ -121,18 +121,11 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 ## Results
 
-<div style="display:flex;">
-  <img src="art/art-1.png" width="330" style="flex:1;">
-  <img src="art/art-2.png" width="330" style="flex:1;">
-  <img src="art/art-3.png" width="330" style="flex:1;">
-</div>
+|   |   |
+|---|---|
+|![](art/art-1.png)|![](art/art-2.png)|
+|![](art/art-3.png)|![](art/art-10.png)|
+|![](art/art-5.png)|![](art/art-6.png)|
+|![](art/art-8.png)|![](art/art-9.png)|
 <img src="art/art-4.png">
-<div style="display:flex;">
-  <img src="art/art-5.png" width="500" style="flex:1;">
-  <img src="art/art-6.png" width="500" style="flex:1;">
-</div>
-<div style="display:flex;">
-  <img src="art/art-8.png" width="500" style="flex:1;">
-  <img src="art/art-9.png" width="500" style="flex:1;">
-</div>
 
