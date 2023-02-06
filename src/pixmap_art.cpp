@@ -37,7 +37,7 @@ int main(int argc, char** argv)
    // pebbles.load("../images/pebbles.png");
    
    // Image roseSmall = rose.resize(200, 200);
-   // Image art1 = earth.deepFried().colorJitter(100).distort("horizontal").painterly();
+   // Image art1 = earth.deepFried().distort("horizontal").painterly();
    // art1.replace(roseSmall.sobel().sharpen().glow(), (earth.width() - roseSmall.width()) / 2, (earth.height() - roseSmall.height()) / 2);
    // art1.save("../art/art-1.png");
 
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
    // Image art5 = cat.sharpen().sobel().glow();
    // art5.save("../art/art-5.png");
 
-   // Image art6 = springPink.gammaCorrect(0.8).swirl().gradient("vertical", {255, 255, 255});
+   // Image art6 = springPink.swirl().gradient("vertical", {255, 255, 255}).painterly().brighten(100);
    // art6.save("../art/art-6.png");
 
    // Image art7 = lake.painterly().sharpen().brighten(100);
