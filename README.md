@@ -111,8 +111,11 @@ pixmap-ops/build $ ../bin/pixmap_art
 </div>
 - Glitch an image
 <img src="demo/earth-glitch.png" width="400">
-- Distort an image
-<img src="demo/earth-distort.png" width="400">
+- Distort an image vertically or horizontally
+<div style="display:flex;">
+  <img src="demo/earth-distort.png" width="400">
+  <img src="demo/rose-distort.png" width="400">
+</div>
 - "Deep fry" an image
 <img src="demo/meme-deepfried.png" width="400">
 
