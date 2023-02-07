@@ -27,7 +27,7 @@ Image::Image() {
 }
 
 Image::Image(int width, int height)  {
-   this->_data = (unsigned char*) malloc(sizeof(unsigned char*) * width * height * 3);
+   this->_data = (unsigned char*) calloc(width * height * 3, sizeof(unsigned char*));
    this->_width = width;
    this->_height = height;
 }
@@ -382,7 +382,7 @@ Image Image::colorJitter(int size) const {
    Image result(*this);
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      int jitter = pow(-1, jitter % 2) * (rand() % size);
+      int jitter = pow(-1, idx % 2) * (rand() % size);
       px.r = std::min(px.r + jitter, 255);
       px.g = std::min(px.g + jitter, 255);
       px.b = std::min(px.b + jitter, 255);
