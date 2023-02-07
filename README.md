@@ -121,21 +121,11 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 ## Results
 
-<div style="display:flex;">
-  <img src="art/art-1.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-  <img src="art/art-2.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-</div>
-<div style="display:flex;">
-  <img src="art/art-3.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-  <img src="art/art-10.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-</div>
+|![](art/art-1.png)|![](art/art-2.png)|
+|---|---|
+||![](art/art-3.png)|![](art/art-10.png)|
 <img src="art/art-4.png">
-<div style="display:flex;">
-  <img src="art/art-5.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-  <img src="art/art-6.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-</div>
-<div style="display:flex;">
-  <img src="art/art-8.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-  <img src="art/art-9.png" style="flex-basis: 50%; max-width: 50%; height: auto;">
-</div>
+|![](art/art-5.png)|![](art/art-6.png)|
+|![](art/art-8.png)|![](art/art-9.png)|
+|![](art/art-1.png)|![](art/art-2.png)|
 
