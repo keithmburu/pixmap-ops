@@ -121,10 +121,11 @@ pixmap-ops/build $ ../bin/pixmap_art
 
 ## Results
 
-|![](art/art-1.png)|![](art/art-2.png)|
+|   |   |
 |---|---|
+|![](art/art-1.png)|![](art/art-2.png)|
 ||![](art/art-3.png)|![](art/art-10.png)|
-<img src="art/art-4.png">
+|<img src="art/art-4.png">|
 |![](art/art-5.png)|![](art/art-6.png)|
 |![](art/art-8.png)|![](art/art-9.png)|
 |![](art/art-1.png)|![](art/art-2.png)|
