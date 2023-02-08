@@ -377,15 +377,21 @@ Image Image::grayscale() const {
    return result;
 }
 
-Image Image::colorJitter(int size) const {
-   std::cout << "Jittering colors with size = " << size << std::endl;
+Image Image::colorJitter(int maxSize) const {
+   std::cout << "Jittering colors with max size = " << maxSize << std::endl;
    Image result(*this);
+   int Rjitter, Gjitter, Bjitter, Rsign, Gsign, Bsign;
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      int jitter = pow(-1, idx % 2) * (rand() % size);
-      px.r = std::min(px.r + jitter, 255);
-      px.g = std::min(px.g + jitter, 255);
-      px.b = std::min(px.b + jitter, 255);
+      Rsign = -1 * (rand() % 2); 
+      Rjitter = Rsign * (rand() % maxSize);
+      px.r = std::max(std::min(px.r + Rjitter, 255), 0);
+      Gsign = -1 * (rand() % 2); 
+      Gjitter = Gsign * (rand() % maxSize);
+      px.g = std::max(std::min(px.g + Gjitter, 255), 0);
+      Bsign = -1 * (rand() % 2); 
+      Bjitter = Bsign * (rand() % maxSize);
+      px.b = std::max(std::min(px.b + Bjitter, 255), 0);
       result.set(idx, px);
    }
    return result;
@@ -699,7 +705,7 @@ Image Image::deepFried() const {
       px.b = (int) (pow(px.b / 255.0, 15) * 255);
       result.set(idx, px);
    }
-   return result;
+   return result.sharpen().colorJitter(100);
 }
 
 }  // namespace agl

@@ -187,8 +187,8 @@ class Image {
   // Convert the image to grayscale
   Image grayscale() const;
 
-  // Randomly tweak pixel values with max of "size"
-  Image colorJitter(int size) const;
+  // Randomly tweak pixel values with tweak value < maxSize
+  Image colorJitter(int maxSize) const;
 
   // return a bitmap version of this image
   Image bitmap(int size) const;
@@ -232,6 +232,7 @@ class Image {
   // Decrease all pixel values by fixed percentage
   Image dim(int percentage) const;
 
+  // Apply excessive saturation, sharpening, and grainy texture
   Image deepFried() const;
 
  private:
