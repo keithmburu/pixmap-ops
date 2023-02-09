@@ -57,9 +57,9 @@ std::ostream& operator<<(std::ostream& os, const Image& image) {
    int sumRed = 0.0f; int sumGreen = 0.0f; int sumBlue = 0.0f;
    for (int idx = 0; idx < image.width() * image.height(); idx++) {
       Pixel px = image.get(idx);
-      sumRed += (int) px.r;
-      sumGreen += (int) px.g;
-      sumBlue += (int) px.b;
+      sumRed += px.r;
+      sumGreen += px.g;
+      sumBlue += px.b;
    }
    int avgRed = sumRed / (image.width() * image.height());
    int avgGreen = sumGreen / (image.width() * image.height());
@@ -410,14 +410,14 @@ Image Image::bitmap(int size) const {
          for (int k = i; k < i + size && k < this->_height; k++) {
             for (int l = j; l < j + size && l < this->_width; l++) {
                Pixel px = this->get(k, l);
-               sumRed += (int) px.r;
-               sumGreen += (int) px.g;
-               sumBlue += (int) px.b;
+               sumRed += px.r;
+               sumGreen += px.g;
+               sumBlue += px.b;
             }
          } 
-         unsigned char avgRed = (unsigned char) sumRed / numPixels;
-         unsigned char avgGreen = (unsigned char) sumGreen / numPixels;
-         unsigned char avgBlue = (unsigned char) sumBlue / numPixels;
+         unsigned char avgRed = sumRed / numPixels;
+         unsigned char avgGreen = sumGreen / numPixels;
+         unsigned char avgBlue = sumBlue / numPixels;
          for (int k = i; k < i + size; k++) {
             for (int l = j; l < j + size; l++) {
                result.set(k, l, {avgRed, avgGreen, avgBlue});
@@ -538,11 +538,7 @@ Image Image::glow() const {
          white.set(idx, {0, 0, 0});
       }
    }
-   white.save("white.png");
-   white.blur().save("white-blur.png");
-   white.blurGaussian().save("white-blurGaussian.png");
-   // return this->alphaBlend(white.blurGaussian(), 0.5);
-   return this->add(white.blurGaussian());
+   return this->add(white.blur());
 }
 
 Image Image::border(const Pixel& c) const {
@@ -577,17 +573,18 @@ Image Image::sobel() const {
          int sumNeighborsRedX, sumNeighborsGreenX, sumNeighborsBlueX, sumNeighborsRedY, sumNeighborsGreenY, sumNeighborsBlueY;
          sumNeighborsRedX = sumNeighborsGreenX = sumNeighborsBlueX = sumNeighborsRedY = sumNeighborsGreenY = sumNeighborsBlueY = 0;
          for (int k = i - 1; k <= i + 1; k++) {
-            for (int l = j - 1; l <= j + 1; l++) {
-               if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
-                  Pixel px = this->get(k, l);
-                  // std::cout << k << " " << l << std::endl;
-                  sumNeighborsRedX = (int) px.r * Gx[k - (i - 1)][l - (j - 1)];
-                  sumNeighborsGreenX += (int) px.g * Gx[k - (i - 1)][l - (j - 1)];
-                  sumNeighborsBlueX += (int) px.b * Gx[k - (i - 1)][l - (j - 1)];
-                  sumNeighborsRedY += (int) px.r * Gy[k - (i - 1)][l - (j - 1)];
-                  sumNeighborsGreenY += (int) px.g * Gy[k - (i - 1)][l - (j - 1)];
-                  sumNeighborsBlueY += (int) px.b * Gy[k - (i - 1)][l - (j - 1)];
-               } 
+            if (0 <= k && k < this->_height) {
+               for (int l = j - 1; l <= j + 1; l++) {
+                  if (0 <= l && l < this->_width) {
+                     Pixel px = this->get(k, l);
+                     sumNeighborsRedX += px.r * Gx[k - (i - 1)][l - (j - 1)];
+                     sumNeighborsGreenX += px.g * Gx[k - (i - 1)][l - (j - 1)];
+                     sumNeighborsBlueX += px.b * Gx[k - (i - 1)][l - (j - 1)];
+                     sumNeighborsRedY += px.r * Gy[k - (i - 1)][l - (j - 1)];
+                     sumNeighborsGreenY += px.g * Gy[k - (i - 1)][l - (j - 1)];
+                     sumNeighborsBlueY += px.b * Gy[k - (i - 1)][l - (j - 1)];
+                  } 
+               }
             }
          }
          unsigned char GRed = std::min((int) sqrt(pow(sumNeighborsRedX, 2) + pow(sumNeighborsRedY, 2)), 255);
@@ -616,7 +613,7 @@ Image Image::glitch() const {
 
 Image Image::painterly() const {
    std::cout << "Applying painterly effect" << std::endl;
-  return (((this->blurGaussian()).sobel()).alphaBlend(*this, 0.2)).brighten(20);
+  return (((this->blur()).sobel()).alphaBlend(*this, 0.2)).brighten(20);
 }
 
 Image Image::distort(const std::string& orientation) const {
@@ -698,7 +695,7 @@ Image Image::dim(int percentage) const {
    return result;
 }
 
-Image Image::deepFried() const {
+Image Image::deepFry() const {
    std::cout << "Applying deep fried effect" << std::endl;
    Image result(*this);
    for (int idx = 0; idx < this->_width * this->_height; idx++) {

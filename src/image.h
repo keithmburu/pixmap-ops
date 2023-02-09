@@ -233,7 +233,7 @@ class Image {
   Image dim(int percentage) const;
 
   // Apply excessive saturation, sharpening, and grainy texture
-  Image deepFried() const;
+  Image deepFry() const;
 
  private:
    // char array for storing pixel data
