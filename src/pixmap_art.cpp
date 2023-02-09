@@ -1,7 +1,7 @@
 /**
  * @file pixmap_art.cpp
  * @author Keith Mburu
- * @version 2023-02-02
+ * @version 2023-02-09
  */
 
 #include <iostream>
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
    Image springPink;
    springPink.load("../images/spring-pink.jpg");
 
-   Image art6 = springPink.resize(756, 1008).swirl().gradient("vertical", {255, 255, 255}).painterly().brighten(20);
+   Image art6 = springPink.resize(756, 1008).swirl().painterly();
    art6.save("../art/art-6.png");
 
    Image lake;

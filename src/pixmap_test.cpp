@@ -2,7 +2,7 @@
  * @file pixmap_test.cpp
  * @author Keith Mburu
  * @author Aline Normoyle
- * @version 2023-02-02
+ * @version 2023-02-09
  */
 
 #include <iostream>

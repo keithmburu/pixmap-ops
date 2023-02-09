@@ -3,7 +3,7 @@
  * 
  * @file image.cpp
  * @author Keith Mburu
- * @version 2023-02-02
+ * @version 2023-02-09
  */
 
 #include "image.h"
@@ -446,13 +446,12 @@ Image Image::fill(const Pixel& a, const Pixel& b) {
    return result;
 }
 
-Image Image::blur() const {
+Image Image::blur(int iters) const {
    std::cout << "Blurring" << std::endl;
    Image result(*this);
-   int ITERS = 1;
    int KERNEL_SIZE = 3;
    int offset = KERNEL_SIZE / 2;
-   for (int iter = 0; iter < ITERS; iter++) {
+   for (int iter = 0; iter < iters; iter++) {
       for (int i = 0; i < this->_height; i++) {
          for (int j = 0; j < this->_width; j++) {
             int sumNeighborsRed, sumNeighborsGreen, sumNeighborsBlue;
@@ -483,11 +482,12 @@ Image Image::blur() const {
 Image Image::blurGaussian() const {
    std::cout << "Blurring with Gaussian blur" << std::endl;
    Image result(*this);
+   int KERNEL_SIZE = 17;
    float STD_DEV = 10.0;
-   int KERNEL_SIZE = 11;
    float kernel[KERNEL_SIZE][KERNEL_SIZE];
-   float kernelSum = 0.0;
    int offset = KERNEL_SIZE / 2;
+   float kernelSum = 0.0;
+   // creating Gaussian kernel
    for (int k = -offset; k <= offset; k++) {
      for (int l = -offset; l <= offset; l++) {
          float exponent = -(k * k + l * l) / (2 * STD_DEV * STD_DEV);
@@ -495,27 +495,26 @@ Image Image::blurGaussian() const {
          kernelSum += kernel[k + offset][l + offset];
      }
    }
+   // normalizing
    for (int i = 0; i < KERNEL_SIZE; i++) {
       for (int j = 0; j < KERNEL_SIZE; j++) {
          kernel[i][j] /= kernelSum;
-         // std::cout << kernel[i][j] << " ";
       }
-      // std::cout << std::endl;
    }
 
-   int ITERS = 1;
+   int ITERS = 3;
    for (int iter = 0; iter < ITERS; iter++) {
-      for (int i = 0; i < this->_height; i++) {
-         for (int j = 0; j < this->_width; j++) {
+      for (int i = 0; i < result.height(); i++) {
+         for (int j = 0; j < result.width(); j++) {
             float avgNeighborsRed, avgNeighborsGreen, avgNeighborsBlue;
             avgNeighborsRed = avgNeighborsGreen = avgNeighborsBlue = 0;
             for (int k = i - offset; k <= i + offset; k++) {
                for (int l = j - offset; l <= j + offset; l++) {
                   Pixel px;
-                  if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
-                     px = this->get(k, l);
+                  if (0 <= k && k < result.height() && 0 <= l && l < result.width()) {
+                     px = result.get(k, l);
                   } else {
-                     px = this->get(i, j);
+                     px = result.get(i, j);
                   }
                   avgNeighborsRed += px.r * kernel[k - (i - offset)][l - (j - offset)];
                   avgNeighborsGreen += px.g * kernel[k - (i - offset)][l - (j - offset)];
@@ -531,14 +530,36 @@ Image Image::blurGaussian() const {
 
 Image Image::glow() const {
    std::cout << "Applying glow effect" << std::endl;
-   Image white(*this);
+   Image extractedWhite(*this);
+   Image white(this->_width, this->_height);
+   Image result(*this);
+   float threshold = 0.7;
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      if (px.r < 175 || px.g < 175 || px.b < 175) {
-         white.set(idx, {0, 0, 0});
+      unsigned char c = px.r * 0.3f + px.g * 0.59f + px.b * 0.11f;
+      float intensity = c / 255.0f;
+      if (intensity > threshold) { 
+         extractedWhite.set(idx, {255, 255, 255});
+      } else {
+         extractedWhite.set(idx, {0, 0, 0});
       }
+      white.set(idx, {255, 255, 255});
    }
-   return this->add(white.blur());
+   extractedWhite.save("../demo/white-extractedWhite.png");
+   Image whiteBlurred = extractedWhite.blurGaussian();
+   whiteBlurred.save("../demo/white-blur.png");
+   for (int idx = 0; idx < result.width() * result.height(); idx++) {
+      Pixel alphaPx = whiteBlurred.get(idx);
+      unsigned char c = alphaPx.r * 0.3f + alphaPx.g * 0.59f + alphaPx.b * 0.11f;
+      float alpha = c / 255.0f;
+      Pixel px1 = this->get(idx);
+      Pixel px2 = white.get(idx);
+      px1.r = px1.r * (1 - alpha) + px2.r * alpha;
+      px1.g = px1.g * (1 - alpha) + px2.g * alpha;
+      px1.b = px1.b * (1 - alpha) + px2.b * alpha;
+      result.set(idx, px1);
+   }
+   return result;
 }
 
 Image Image::border(const Pixel& c) const {

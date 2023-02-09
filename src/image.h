@@ -4,7 +4,7 @@
  * 
  * @file image.h
  * @author Keith Mburu
- * @version 2023-02-02
+ * @version 2023-02-09
  */
 
 #ifndef AGL_IMAGE_H_
@@ -197,7 +197,7 @@ class Image {
   Image fill(const Pixel& a, const Pixel& b);
 
   // Apply simple box blur to image 
-  Image blur() const;
+  Image blur(int iters = 1) const;
 
   // Apply gaussian blur to image 
   Image blurGaussian() const;
