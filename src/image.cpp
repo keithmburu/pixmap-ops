@@ -97,6 +97,7 @@ void Image::set(int width, int height, unsigned char* data) {
 }
 
 bool Image::load(const std::string& filename, bool flip) {
+   std::cout << "Loading " << filename << std::endl;
    int n;
    this->_data = stbi_load(filename.c_str(), &this->_width, &this->_height, &n, 3);
    if (flip) {
@@ -110,6 +111,7 @@ bool Image::load(const std::string& filename, bool flip) {
 }
 
 bool Image::save(const std::string& filename, bool flip) const {
+   std::cout << "Saving to " << filename << std::endl;
    unsigned char* data = this->_data;
    if (flip) {
       data = (this->flipHorizontal()).data();
@@ -400,21 +402,22 @@ Image Image::colorJitter(int maxSize) const {
 Image Image::bitmap(int size) const {
    Image result(*this);
    std::cout << "Creating bitmap with size = " << size << std::endl;
-   for (int i = 0; i < result.height(); i+=size) {
-      for (int j = 0; j < result.width(); j+=size) {
-         int sumRed; int sumGreen; int sumBlue;
+   int numPixels = size * size;
+   for (int i = 0; i < this->_height; i+=size) {
+      for (int j = 0; j < this->_width; j+=size) {
+         int sumRed, sumGreen, sumBlue;
          sumRed = sumGreen = sumBlue = 0;
-         for (int k = i; k < i + size; k++) {
-            for (int l = j; l < j + size; l++) {
-               Pixel px = result.get(k, l);
-               sumRed += px.r;
-               sumGreen += px.g;
-               sumBlue += px.b;
+         for (int k = i; k < i + size && k < this->_height; k++) {
+            for (int l = j; l < j + size && l < this->_width; l++) {
+               Pixel px = this->get(k, l);
+               sumRed += (int) px.r;
+               sumGreen += (int) px.g;
+               sumBlue += (int) px.b;
             }
-         }
-         unsigned char avgRed = sumRed / (size * size);
-         unsigned char avgGreen = sumGreen / (size * size);
-         unsigned char avgBlue = sumBlue / (size * size);
+         } 
+         unsigned char avgRed = (unsigned char) sumRed / numPixels;
+         unsigned char avgGreen = (unsigned char) sumGreen / numPixels;
+         unsigned char avgBlue = (unsigned char) sumBlue / numPixels;
          for (int k = i; k < i + size; k++) {
             for (int l = j; l < j + size; l++) {
                result.set(k, l, {avgRed, avgGreen, avgBlue});
@@ -577,7 +580,8 @@ Image Image::sobel() const {
             for (int l = j - 1; l <= j + 1; l++) {
                if (0 <= k && k < this->_height && 0 <= l && l < this->_width) {
                   Pixel px = this->get(k, l);
-                  sumNeighborsRedX += (int) px.r * Gx[k - (i - 1)][l - (j - 1)];
+                  // std::cout << k << " " << l << std::endl;
+                  sumNeighborsRedX = (int) px.r * Gx[k - (i - 1)][l - (j - 1)];
                   sumNeighborsGreenX += (int) px.g * Gx[k - (i - 1)][l - (j - 1)];
                   sumNeighborsBlueX += (int) px.b * Gx[k - (i - 1)][l - (j - 1)];
                   sumNeighborsRedY += (int) px.r * Gy[k - (i - 1)][l - (j - 1)];
@@ -616,7 +620,7 @@ Image Image::painterly() const {
 }
 
 Image Image::distort(const std::string& orientation) const {
-   std::cout << "Applying distortion effect" << std::endl;
+   std::cout << "Applying " << orientation << " distortion effect" << std::endl;
    Image result(*this);
    if (orientation != "vertical" && orientation != "horizontal") {
       std::cerr << "Invalid orientation argument!" << std::endl;
@@ -669,11 +673,12 @@ Image Image::sharpen() const {
 Image Image::brighten(int percentage) const {
    std::cout << "Brightening by " << percentage << " percent" << std::endl;
    Image result(*this);
+   float factor = (100.0f + percentage) / 100.0f;
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      px.r = std::min(px.r * (100 + percentage) / 100, 255);
-      px.g = std::min(px.g  * (100 + percentage) / 100, 255);
-      px.b = std::min(px.b  * (100 + percentage) / 100, 255);
+      px.r = std::min((int) (px.r * factor), 255);
+      px.g = std::min((int) (px.g * factor), 255);
+      px.b = std::min((int) (px.b * factor), 255);
       result.set(idx, px);
    }
    return result;
@@ -682,11 +687,12 @@ Image Image::brighten(int percentage) const {
 Image Image::dim(int percentage) const {
    std::cout << "Dimming by " << percentage << " percent" << std::endl;
    Image result(*this);
+   float factor = (100.0f - percentage) / 100.0f;
    for (int idx = 0; idx < this->_width * this->_height; idx++) {
       Pixel px = this->get(idx);
-      px.r = px.r * (100 - percentage) / 100;
-      px.g = px.g  * (100 - percentage) / 100;
-      px.b = px.b  * (100 - percentage) / 100;
+      px.r = (int) (px.r * factor);
+      px.g = (int) (px.g  * factor);
+      px.b = (int) (px.b  * factor);
       result.set(idx, px);
    }
    return result;
